@@ -17,18 +17,23 @@ class CharacterListActivity : ComponentActivity() {
             DndSpellsTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                BackdropScaffold(appBar = {
-                    DndTopBar("D&D Spellbook - Select a character")
-                }, backLayerContent = {
-                    Greeting("Android")
-                }, frontLayerContent = {
-                    Greeting("Android")
-                }) {
+                    CharacterListActivityContent()
                 }
-
-            }
             }
         }
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun CharacterListActivityContent() {
+    BackdropScaffold(appBar = {
+        DndTopBar("D&D Spellbook - Select a character")
+    }, backLayerContent = {
+        Greeting("Android")
+    }, frontLayerContent = {
+        Greeting("Android")
+    }) {
     }
 }
 
@@ -37,10 +42,11 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     DndSpellsTheme {
-        Greeting("Android")
+        CharacterListActivityContent()
     }
 }

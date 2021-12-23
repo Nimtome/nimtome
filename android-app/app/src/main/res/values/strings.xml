@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">DndSpells</string>
+    <string name="select_your_character">Select Your Character</string>
+    <string name="character_avatar_of">Character avatar of</string>
+    <string name="import_spells_xml">Import Spells.xml</string>
+    <string name="rationale_title">Fun Title</string>
+    <string name="proceed">Proceed</string>
+    <string name="cancel">Cancel</string>
+    <string name="file_read_explanation">App will no work</string>
+    <string name="select_file">Select an XML file</string>
+    <string name="title_activity_create_character">CreateCharacterActivity</string>
+    <string name="character_name">Character Name</string>
+    <string name="character_level">Level</string>
+    <string name="add_character">Add Character</string>
+    <string name="title_activity_spell_details">SpellDetailsActivity</string>
+    <string name="character_error">There are some errors with your character</string>
+    <string name="add_new_character">Add New Character</string>
+    <string name="title_activity_character_details">CharacterDetailsActivity</string>
+    <string name="title_activity_select_spells">SelectSpellsActivity</string>
+    <string name="select_spells">- select spells</string>
+    <string name="title_activity_ruinable">RuinableActivity</string>
+    <string name="modify_character">Modify Character</string>
+    <string name="filter_components">Filter Components</string>
+    <string name="filter_spell_level">Filter Spell Level</string>
+    <string name="spell_name">Spell Name</string>
+    <string name="you_rolled">You rolled:</string>
+    <string name="title_activity_character_list">CharacterListActivity</string>
+</resources>

@@ -21,14 +21,12 @@ import com.flyinpancake.dndspells.ui.components.DndTopBar
 import com.flyinpancake.dndspells.ui.theme.DndSpellsTheme
 import com.flyinpancake.dndspells.viewmodel.SpellViewModel
 import kotlinx.coroutines.launch
-import kotlinx.serialization.ExperimentalSerializationApi
 
 class SpellDetailsActivity : ComponentActivity() {
     companion object{
         const val KEY_SPELL_NAME = "KEY_SPELL_NAME"
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -132,8 +130,16 @@ fun SpellDescription(spell: Spell){
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview2() {
+fun SpellDetailsPreview() {
     DndSpellsTheme {
+        SpellDetails(Spell())
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SpellDetailsDarkPreview() {
+    DndSpellsTheme(darkTheme = true) {
         SpellDetails(Spell())
     }
 }

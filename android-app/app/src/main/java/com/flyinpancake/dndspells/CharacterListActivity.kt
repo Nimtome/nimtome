@@ -13,6 +13,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.runtime.*
@@ -28,6 +29,7 @@ import com.flyinpancake.dndspells.model.DndCharacter
 import com.flyinpancake.dndspells.model.Spell
 import com.flyinpancake.dndspells.model.SpellImporter
 import com.flyinpancake.dndspells.ui.components.CharacterCard
+import com.flyinpancake.dndspells.ui.components.EditCharacterCard
 import com.flyinpancake.dndspells.ui.components.MainMenuSpellCard
 import com.flyinpancake.dndspells.ui.theme.CharacterListTopbarColors
 import com.flyinpancake.dndspells.ui.theme.DndSpellsTheme
@@ -39,6 +41,7 @@ class CharacterListActivity : ComponentActivity() {
     private lateinit var characterViewModel: CharacterViewModel
     private lateinit var spellsViewModel: SpellViewModel
 
+    @OptIn(DelicateCoroutinesApi::class)
     private val getSpellsFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri?.let {
             GlobalScope.launch {
@@ -198,6 +201,8 @@ private fun MainActivityContent(
 
     var menuSelection by remember { mutableStateOf(MainMenuElements.CHARACTERS)}
 
+    var isEditMode by remember { mutableStateOf(false)}
+
     BackdropScaffold(
         appBar = {
           CenterAlignedTopAppBar(
@@ -210,6 +215,10 @@ private fun MainActivityContent(
               },
               actions = {
 
+
+                  IconButton(onClick = { isEditMode = !isEditMode }) {
+                      Icon(Icons.Default.Edit,"Edit")
+                  }
                   IconButton(onClick = {importSpells()}) {
                       Icon(painterResource(id = R.drawable.application_import), "Import spells")
                   }
@@ -249,14 +258,15 @@ private fun MainActivityContent(
             if (menuSelection == MainMenuElements.CHARACTERS)
                 CharacterList(
                     list = characterList,
-                    onClick = { openCharacterDetails(it) },
-                    onLongClick = { modifyCharacter(it) }
+                    isEditMode = isEditMode,
+                    onClick = {openCharacterDetails(it)},
+                    onEditClick = { modifyCharacter(it)},
                 )
             else
                 SpellList(
                     list = spellList,
                     onClick = { openSpellDetails(it)},
-                    isEditMode = true,
+                    isEditMode = isEditMode,
                     onEditClick = {modifySpell(it)}
                 )
     },  headerHeight = 32.dp,
@@ -278,8 +288,9 @@ private fun BackdropScaffoldState.switch(scope: CoroutineScope) {
 @Composable
 private fun CharacterList(
     list: List<DndCharacter>?,
+    isEditMode: Boolean,
     onClick: (DndCharacter) -> Unit = {},
-    onLongClick: (DndCharacter) -> Unit = {},
+    onEditClick: (DndCharacter) -> Unit
 ) {
     if (list == null) {
         CircularProgressIndicator()
@@ -298,14 +309,23 @@ private fun CharacterList(
                 content = {
                 items(items = list,
                     itemContent = { character ->
-                        CharacterCard(
-                            character = character,
-                            onClick = { onClick(it) },
-                            onLongClick = { onLongClick(character) },
-                            modifier = Modifier
-                                .fillMaxWidth(.9f)
-                                .padding(5.dp),
-                        )
+                        if (!isEditMode)
+                            CharacterCard(
+                                character = character,
+                                onClick = { onClick(it) },
+                                modifier = Modifier
+                                    .fillMaxWidth(.9f)
+                                    .padding(5.dp),
+                            )
+                        else
+                            EditCharacterCard(
+                                character = character,
+                                onClick = {onClick(it)},
+                                onEditClick = {onEditClick(it)},
+                                modifier = Modifier
+                                    .fillMaxWidth(.9f)
+                                    .padding(5.dp)
+                            )
                     }
                 )
             })
@@ -373,8 +393,11 @@ fun CharacterListPreview() {
             modifyCharacter = {},
         )
         if (showDialog)
-        StorageAccessRationaleDialog(importSpells = {}, closeDialog =  {
-            showDialog = false
-        } )
+        StorageAccessRationaleDialog(
+            importSpells = {},
+            closeDialog =  {
+                showDialog = false
+            },
+        )
     }
 }

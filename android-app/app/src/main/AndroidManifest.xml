@@ -44,15 +44,6 @@
             android:exported="false"
             android:label="@string/title_activity_create_character"
             android:theme="@style/Theme.DndSpells.NoActionBar" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

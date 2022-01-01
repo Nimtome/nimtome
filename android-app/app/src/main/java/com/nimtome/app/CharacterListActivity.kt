@@ -153,16 +153,19 @@ class CharacterListActivity : ComponentActivity() {
         }
     }
 
-    private fun handleRequestPermission() {
-        when {
-            ContextCompat.checkSelfPermission(
+    private fun hasStoragePermissions() : Boolean {
+        return ContextCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED -> {
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun handleRequestPermission() {
+        when {
+             this.hasStoragePermissions() -> {
                 openSpellsFilePicker()
             }
-
-            shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+            this.shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
                 showRationaleDialog()
             }
             else -> {

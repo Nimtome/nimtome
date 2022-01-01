@@ -1,4 +1,4 @@
-package com.flyinpancake.dndspells.ui.components
+package com.nimtome.app.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,10 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.flyinpancake.dndspells.model.Spell
-import com.flyinpancake.dndspells.sampleSpells
-import com.flyinpancake.dndspells.ui.theme.CardElevation
-import com.flyinpancake.dndspells.ui.theme.DndSpellsTheme
+import com.nimtome.app.model.Spell
+import com.nimtome.app.sampleSpells
+import com.nimtome.app.ui.components.SpellContent
+import com.nimtome.app.ui.theme.CardElevation
+import com.nimtome.app.ui.theme.DndSpellsTheme
 
 
 @ExperimentalMaterialApi

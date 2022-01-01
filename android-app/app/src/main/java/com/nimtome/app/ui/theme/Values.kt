@@ -1,4 +1,4 @@
-package com.flyinpancake.dndspells.ui.theme
+package com.nimtome.app.ui.theme
 
 import androidx.compose.ui.unit.dp
 

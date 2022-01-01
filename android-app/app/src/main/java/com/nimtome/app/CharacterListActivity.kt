@@ -214,8 +214,6 @@ private fun MainActivityContent(
                   }
               },
               actions = {
-
-
                   IconButton(onClick = { isEditMode = !isEditMode }) {
                       Icon(Icons.Default.Edit,"Edit")
                   }
@@ -267,7 +265,12 @@ private fun MainActivityContent(
                     list = spellList,
                     onClick = { openSpellDetails(it)},
                     isEditMode = isEditMode,
-                    onEditClick = {modifySpell(it)}
+                    onEditClick = {
+                                  scope.launch {
+                                      scaffoldState.snackbarHostState
+                                              .showSnackbar(message = "Function not yet ready")
+                                  }
+                    },
                 )
     },  headerHeight = 32.dp,
         scaffoldState = scaffoldState,

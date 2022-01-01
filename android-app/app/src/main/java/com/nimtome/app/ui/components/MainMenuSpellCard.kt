@@ -43,7 +43,7 @@ fun MainMenuSpellCard(
             Row(Modifier.fillMaxWidth()) {
                 if (isEditMode)
                     IconButton(
-                        onClick = { onClick(spell) },
+                        onClick = { onEditClick(spell) },
                         Modifier.padding(end = 5.dp)
                     ) {
                         Icon(Icons.Default.Edit, "Edit Spell")

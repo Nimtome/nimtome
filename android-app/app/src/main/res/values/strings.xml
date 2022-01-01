@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DndSpells</string>
+    <string name="app_name">Nimtome</string>
     <string name="select_your_character">Select Your Character</string>
     <string name="character_avatar_of">Character avatar of</string>
     <string name="import_spells_xml">Import Spells.xml</string>

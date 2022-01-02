@@ -1,4 +1,4 @@
-plugins {
+aplugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
@@ -86,4 +86,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     // Coroutine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+    
+    //google accompanist systemuicontroller
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.22.0-rc"
 }

@@ -29,9 +29,18 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun DndSpellsTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
+    val systemUiController = rememberSystemUiController()
     val colors = if (darkTheme) {
+        // You can give your prefered color here, for the status bar(dark theme)
+        systemUiController.setSystemBarsColor(
+        color = Color.White
+        )
         DarkColorPalette
     } else {
+        //You can give your prefered color here, for the status bar(light theme)
+        systemUiController.setSystemBarsColor(
+        color = Color.Black
+        )   
         LightColorPalette
     }
 

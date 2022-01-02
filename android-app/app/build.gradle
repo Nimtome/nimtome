@@ -5,6 +5,9 @@ plugins {
     id "kotlinx-serialization"
 }
 
+apply plugin: "io.gitlab.arturbosch.detekt"
+
+
 android {
     compileSdk 31
 

@@ -29,7 +29,7 @@ fun LevelSelector(
         )
         Text(text = "$level", style = MaterialTheme.typography.body1)
     }
-    LevelSlider (level) {
+    LevelSlider(level) {
         onLevelChange(it)
     }
 }
@@ -45,7 +45,7 @@ private fun LevelSlider(
         value = sliderPosition,
         onValueChange = {
             sliderPosition = it
-            onValueChange((sliderPosition * 20f ).toInt())
+            onValueChange((sliderPosition * 20f).toInt())
         },
         modifier = Modifier
             .padding(horizontal = 35.dp)

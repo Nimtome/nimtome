@@ -3,7 +3,7 @@ package com.nimtome.app.ui.logic
 import com.nimtome.app.model.DndClass
 import com.nimtome.app.model.Spell
 
-data class SpellFilter (
+data class SpellFilter(
     val nameFilter: String = "",
     val levelFilter: Float = 0f,
     val levelFilterEnabled: Boolean = false,
@@ -18,7 +18,7 @@ data class SpellFilter (
         }.filter { spell ->
             !levelFilterEnabled || spell.level == levelFilter.toInt()
         }.filter { spell ->
-            !componentFilterEnabled || componentFilter.all { char -> spell.components.contains(char)}
+            !componentFilterEnabled || componentFilter.all { char -> spell.components.contains(char) }
         }.filter { spell ->
             !classFilterEnabled || spell.classes.split(",").any {
                 it.contains(classFilter.legibleName.split(" ")[0])

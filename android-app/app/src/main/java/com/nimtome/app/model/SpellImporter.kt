@@ -92,14 +92,14 @@ class SpellImporter {
         return Spell(
             name!!,
             desc,
-            level?: 0,
-            components?:"",
-            range?: "",
-            time?: "",
+            level ?: 0,
+            components ?: "",
+            range ?: "",
+            time ?: "",
             school ?: "",
             ritual ?: false,
             duration ?: "",
-            classes?: "Any",
+            classes ?: "Any",
             roll
         )
     }

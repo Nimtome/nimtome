@@ -4,7 +4,10 @@ import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -54,16 +57,16 @@ class CreateCharacterActivity : ComponentActivity() {
 
         setContent {
             MyApp {
-                var dndCharacter: DndCharacter? by remember { mutableStateOf(null)}
+                var dndCharacter: DndCharacter? by remember { mutableStateOf(null) }
                 characterLiveData = characterName?.let { characterViewModel.get(it) }
                 val originalCharacter = characterLiveData?.observeAsState()
 
                 if (dndCharacter == null)
-                dndCharacter = if (!isCreateMode && originalCharacter != null) {
-                    originalCharacter.value
-                } else {
-                    DndCharacter()
-                }
+                    dndCharacter = if (!isCreateMode && originalCharacter != null) {
+                        originalCharacter.value
+                    } else {
+                        DndCharacter()
+                    }
 
                 if (dndCharacter == null)
                     Column(
@@ -169,13 +172,13 @@ fun EditCharacterFloatingActionButton(
         text = { Text(stringResource(R.string.modify_character)) },
         onClick = {
             val validation = validateCharacter(dndCharacter)
-            if (validation){
+            if (validation) {
                 activity?.updateCharacter(dndCharacter)
                 activity?.finish()
             } else
-            scope.launch {
-                scaffoldState.snackbarHostState.showSnackbar(characterErrorText)
-            }
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(characterErrorText)
+                }
         },
         icon = { Icon(Icons.Outlined.Edit, contentDescription = null) },
     )
@@ -194,13 +197,13 @@ fun CreateCharacterFloatingActionButton(
         text = { Text(stringResource(R.string.add_new_character)) },
         onClick = {
             val validation = validateCharacter(dndCharacter)
-            if (validation){
+            if (validation) {
                 addNewCharacter(dndCharacter)
                 activity?.finish()
             } else
-            scope.launch {
-                scaffoldState.snackbarHostState.showSnackbar(characterErrorText)
-            }
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(characterErrorText)
+                }
         },
         icon = { Icon(Icons.Outlined.Add, contentDescription = null) }
     )

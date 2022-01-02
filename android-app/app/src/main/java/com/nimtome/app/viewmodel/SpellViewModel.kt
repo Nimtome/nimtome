@@ -8,12 +8,12 @@ import com.nimtome.app.model.Spell
 import com.nimtome.app.repository.SpellRepository
 import kotlinx.coroutines.launch
 
-class SpellViewModel: ViewModel() {
+class SpellViewModel : ViewModel() {
     private val repo: SpellRepository
 
     val allSpells: LiveData<List<Spell>>
 
-    init{
+    init {
         val spellDao = DndApplication.spellDatabase.spellDao()
         repo = SpellRepository(spellDao)
         allSpells = repo.getAllSpells()

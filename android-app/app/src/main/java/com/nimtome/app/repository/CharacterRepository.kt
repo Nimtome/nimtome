@@ -57,7 +57,7 @@ private fun DndCharacter.toRoomDomain(): RoomCharacter {
 private fun RoomCharacter.toDomainModel(): DndCharacter {
     var characterClass: DndClass = DndClass.None
     DndClass.values().forEach {
-        if (it.legibleName == dndClass){
+        if (it.legibleName == dndClass) {
             characterClass = it
         }
     }

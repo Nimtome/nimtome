@@ -51,7 +51,6 @@ private fun DndCharacter.toRoomDomain(): RoomCharacter {
         spellNameList = spellNameList,
         id = id
     )
-
 }
 
 private fun RoomCharacter.toDomainModel(): DndCharacter {

@@ -5,12 +5,25 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,17 +43,16 @@ import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
 import com.nimtome.app.viewmodel.SpellViewModel
 import kotlinx.coroutines.launch
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.random.Random
-
 
 fun roll(rollText: String): String {
     var sum = 0
     val diceCount = rollText.split("d")[0].toInt()
     val diceSides = rollText.split("d")[1].toInt()
 
-    for (ii in 1..diceCount)
+    repeat(diceCount) {
         sum += Random.nextInt(from = 1, until = diceSides + 1)
+    }
 
     return sum.toString()
 }
@@ -63,8 +75,6 @@ class CharacterDetailsActivity : ComponentActivity() {
                 val spells =
                     viewModel[SpellViewModel::class.java].allSpells.observeAsState().value
                         ?: listOf()
-
-
                 Surface(color = MaterialTheme.colors.background) {
                     CharacterDetailContent(character, spells)
                 }
@@ -73,7 +83,6 @@ class CharacterDetailsActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalSerializationApi::class)
 @Composable
 fun CharacterDetailContent(
     character: DndCharacter = DndCharacter(),

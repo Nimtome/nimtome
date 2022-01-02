@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,18 +38,20 @@ fun LevelSelector(
     }
 }
 
+private const val LEVELS_COUNT = 20f
+
 @Composable
 private fun LevelSlider(
     starterValue: Int,
     onValueChange: (Int) -> Unit
 ) {
-    var sliderPosition by remember { mutableStateOf(starterValue / 20f) }
+    var sliderPosition by remember { mutableStateOf(starterValue / LEVELS_COUNT) }
 
     Slider(
         value = sliderPosition,
         onValueChange = {
             sliderPosition = it
-            onValueChange((sliderPosition * 20f).toInt())
+            onValueChange((sliderPosition * LEVELS_COUNT).toInt())
         },
         modifier = Modifier
             .padding(horizontal = 35.dp)

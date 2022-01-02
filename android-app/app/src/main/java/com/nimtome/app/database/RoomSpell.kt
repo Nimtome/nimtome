@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-
 @Entity(tableName = "spells", indices = [Index(value = ["name"], unique = true)])
 data class RoomSpell(
     @PrimaryKey(autoGenerate = true)

@@ -32,8 +32,6 @@ class SpellRepository(private val spellDao: SpellDao) {
     fun getSpellByName(spellName: String): LiveData<Spell> {
         return spellDao.getSpellLiveByName(spellName).map { it.toDomainModel() }
     }
-
-
 }
 
 private fun Spell.toRoomModel(): RoomSpell {
@@ -52,7 +50,6 @@ private fun Spell.toRoomModel(): RoomSpell {
     )
 }
 
-
 fun RoomSpell.toDomainModel(): Spell {
     return Spell(
         name,
@@ -68,5 +65,3 @@ fun RoomSpell.toDomainModel(): Spell {
         roll
     )
 }
-
-

@@ -40,7 +40,7 @@ fun DndSpellsTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
         //You can give your prefered color here, for the status bar(light theme)
         systemUiController.setSystemBarsColor(
         color = Color.Black
-        )   
+        )
         LightColorPalette
     }
 

@@ -40,7 +40,7 @@ fun roll(rollText: String): String {
     val diceSides = rollText.split("d")[1].toInt()
 
     for (ii in 1..diceCount)
-        sum += Random.nextInt(from = 1, until = diceSides+1 )
+        sum += Random.nextInt(from = 1, until = diceSides + 1)
 
     return sum.toString()
 }
@@ -49,16 +49,20 @@ class CharacterDetailsActivity : ComponentActivity() {
     companion object {
         const val KEY_NAME = "KEY_NAME"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             DndSpellsTheme {
                 // A surface container using the 'background' color from the theme
                 val viewModel = ViewModelProvider(this)
-                val nameInDb = intent.getStringExtra(KEY_NAME)?:""
-                val character =  viewModel[CharacterViewModel::class.java].get(nameInDb).observeAsState().value?: DndCharacter()
+                val nameInDb = intent.getStringExtra(KEY_NAME) ?: ""
+                val character =
+                    viewModel[CharacterViewModel::class.java].get(nameInDb).observeAsState().value
+                        ?: DndCharacter()
                 val spells =
-                    viewModel[SpellViewModel::class.java].allSpells.observeAsState().value ?: listOf()
+                    viewModel[SpellViewModel::class.java].allSpells.observeAsState().value
+                        ?: listOf()
 
 
                 Surface(color = MaterialTheme.colors.background) {
@@ -71,7 +75,10 @@ class CharacterDetailsActivity : ComponentActivity() {
 
 @OptIn(ExperimentalSerializationApi::class)
 @Composable
-fun CharacterDetailContent(character: DndCharacter = DndCharacter(), spells: List<Spell> = listOf()) {
+fun CharacterDetailContent(
+    character: DndCharacter = DndCharacter(),
+    spells: List<Spell> = listOf()
+) {
     val activity = (LocalContext.current as? Activity)
 
     val scaffoldState = rememberScaffoldState()
@@ -118,7 +125,7 @@ fun SpellListItem(
     spell: Spell,
     onItemClick: (Spell) -> Unit = {},
     onRoll: (Spell) -> Unit = {},
-){
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

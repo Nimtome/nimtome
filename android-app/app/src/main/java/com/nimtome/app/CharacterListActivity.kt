@@ -42,32 +42,34 @@ class CharacterListActivity : ComponentActivity() {
     private lateinit var spellsViewModel: SpellViewModel
 
     @OptIn(DelicateCoroutinesApi::class)
-    private val getSpellsFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        uri?.let {
-            GlobalScope.launch {
-                withContext(Dispatchers.IO) {
-                    val resolver = this@CharacterListActivity.contentResolver
+    private val getSpellsFile =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            uri?.let {
+                GlobalScope.launch {
+                    withContext(Dispatchers.IO) {
+                        val resolver = this@CharacterListActivity.contentResolver
 
-                    resolver.openInputStream(uri)?.let { inputStream ->
-                        val importer = SpellImporter()
-                        val spellList = importer.importSpells(inputStream)
+                        resolver.openInputStream(uri)?.let { inputStream ->
+                            val importer = SpellImporter()
+                            val spellList = importer.importSpells(inputStream)
 
-                        //Show snakbar
-                        spellsViewModel.nuke()
-                        spellList.forEach { spell ->
-                            spellsViewModel.insert(spell)
+                            //Show snakbar
+                            spellsViewModel.nuke()
+                            spellList.forEach { spell ->
+                                spellsViewModel.insert(spell)
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    private val getFilePermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            openSpellsFilePicker()
+    private val getFilePermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openSpellsFilePicker()
+            }
         }
-    }
 
     private var showDialog = mutableStateOf(false)
 
@@ -87,7 +89,14 @@ class CharacterListActivity : ComponentActivity() {
                         characterList = characterList,
                         spellList = spellList,
                         importSpells = { handleRequestPermission() },
-                        addCharacter = { startActivity(Intent(this, CreateCharacterActivity::class.java))},
+                        addCharacter = {
+                            startActivity(
+                                Intent(
+                                    this,
+                                    CreateCharacterActivity::class.java
+                                )
+                            )
+                        },
                         modifyCharacter = {
                             val intent = Intent(this, CreateCharacterActivity::class.java)
                             intent.putExtra(CreateCharacterActivity.KEY_CHARACTER_NAME, it.name)
@@ -107,7 +116,7 @@ class CharacterListActivity : ComponentActivity() {
                     )
                     if (showDialog.value)
                         StorageAccessRationaleDialog(
-                            closeDialog =  { showDialog.value = false },
+                            closeDialog = { showDialog.value = false },
                             importSpells = { requestStoragePermission() }
                         )
                 }
@@ -134,7 +143,7 @@ class CharacterListActivity : ComponentActivity() {
     }
 
     private fun showRationaleDialog() {
-        showDialog.value  = true
+        showDialog.value = true
     }
 
     private fun openSpellsFilePicker() {
@@ -160,22 +169,22 @@ private fun StorageAccessRationaleDialog(
     AlertDialog(
         onDismissRequest = { closeDialog() },
         title = {
-                Text("Storage access needed")
+            Text("Storage access needed")
         },
         confirmButton = {
-                        TextButton(onClick = {
-                            importSpells()
-                            closeDialog()
-                        }) {
-                            Text("Ok")
-                        }
+            TextButton(onClick = {
+                importSpells()
+                closeDialog()
+            }) {
+                Text("Ok")
+            }
         },
         dismissButton = {
-                        TextButton(onClick = {
-                            closeDialog()
-                        }) {
-                            Text(text = "Cancel")
-                        }
+            TextButton(onClick = {
+                closeDialog()
+            }) {
+                Text(text = "Cancel")
+            }
         },
         text = {
             Text("We need to use storage to access the spell list XML file. If you cancel this, you have to go into setting and enable storage access.")
@@ -199,83 +208,87 @@ private fun MainActivityContent(
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBackdropScaffoldState(initialValue = BackdropValue.Concealed)
 
-    var menuSelection by remember { mutableStateOf(MainMenuElements.CHARACTERS)}
+    var menuSelection by remember { mutableStateOf(MainMenuElements.CHARACTERS) }
 
-    var isEditMode by remember { mutableStateOf(false)}
+    var isEditMode by remember { mutableStateOf(false) }
 
     BackdropScaffold(
         appBar = {
-          CenterAlignedTopAppBar(
-              title =  { Text(text = "D&D spells") },
-              colors = CharacterListTopbarColors(),
-              navigationIcon = {
-                  IconButton(onClick = { scaffoldState.switch(scope) }) {
-                      Icon(Icons.Outlined.Menu, "Open Menu")
-                  }
-              },
-              actions = {
-                  IconButton(onClick = { isEditMode = !isEditMode }) {
-                      Icon(Icons.Default.Edit,"Edit")
-                  }
-                  IconButton(onClick = {importSpells()}) {
-                      Icon(painterResource(id = R.drawable.application_import), "Import spells")
-                  }
-                  IconButton(onClick = { addCharacter() }) {
-                      Icon(Icons.Default.Add, "Add Character")
-                  }
+            CenterAlignedTopAppBar(
+                title = { Text(text = "D&D spells") },
+                colors = CharacterListTopbarColors(),
+                navigationIcon = {
+                    IconButton(onClick = { scaffoldState.switch(scope) }) {
+                        Icon(Icons.Outlined.Menu, "Open Menu")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { isEditMode = !isEditMode }) {
+                        Icon(Icons.Default.Edit, "Edit")
+                    }
+                    IconButton(onClick = { importSpells() }) {
+                        Icon(painterResource(id = R.drawable.application_import), "Import spells")
+                    }
+                    IconButton(onClick = { addCharacter() }) {
+                        Icon(Icons.Default.Add, "Add Character")
+                    }
 
-              }
-          )
-    }, backLayerContent = {
-                          Column(
-                              Modifier
-                                  .fillMaxWidth(.8f)
-                                  .selectableGroup()) {
-                              Row (verticalAlignment = Alignment.CenterVertically)
-                              {
-                                  androidx.compose.material3.RadioButton(
-                                      selected = menuSelection == MainMenuElements.SPELLS,
-                                      onClick = { menuSelection = MainMenuElements.SPELLS })
+                }
+            )
+        },
+        backLayerContent = {
+            Column(
+                Modifier
+                    .fillMaxWidth(.8f)
+                    .selectableGroup()
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically)
+                {
+                    androidx.compose.material3.RadioButton(
+                        selected = menuSelection == MainMenuElements.SPELLS,
+                        onClick = { menuSelection = MainMenuElements.SPELLS })
 
-                                  Text("Spells")
-                              }
+                    Text("Spells")
+                }
 
-                              Row (verticalAlignment = Alignment.CenterVertically) {
-                                  androidx.compose.material3.RadioButton(
-                                      selected = menuSelection == MainMenuElements.CHARACTERS,
-                                      onClick = { menuSelection = MainMenuElements.CHARACTERS })
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    androidx.compose.material3.RadioButton(
+                        selected = menuSelection == MainMenuElements.CHARACTERS,
+                        onClick = { menuSelection = MainMenuElements.CHARACTERS })
 
-                                  Text("Characters")
+                    Text("Characters")
 
-                              }
+                }
 
-                              Spacer(modifier = Modifier.padding(bottom = 15.dp))
+                Spacer(modifier = Modifier.padding(bottom = 15.dp))
 
-                          }
-    }, frontLayerContent = {
+            }
+        },
+        frontLayerContent = {
             if (menuSelection == MainMenuElements.CHARACTERS)
                 CharacterList(
                     list = characterList,
                     isEditMode = isEditMode,
-                    onClick = {openCharacterDetails(it)},
-                    onEditClick = { modifyCharacter(it)},
+                    onClick = { openCharacterDetails(it) },
+                    onEditClick = { modifyCharacter(it) },
                 )
             else
                 SpellList(
                     list = spellList,
-                    onClick = { openSpellDetails(it)},
+                    onClick = { openSpellDetails(it) },
                     isEditMode = isEditMode,
                     onEditClick = {
-                                  scope.launch {
-                                      scaffoldState.snackbarHostState
-                                              .showSnackbar(message = "Function not yet ready")
-                                  }
+                        scope.launch {
+                            scaffoldState.snackbarHostState
+                                .showSnackbar(message = "Function not yet ready")
+                        }
                     },
                 )
-    },  headerHeight = 32.dp,
+        },
+        headerHeight = 32.dp,
         scaffoldState = scaffoldState,
 
-    ) {
+        ) {
     }
 }
 
@@ -304,34 +317,34 @@ private fun CharacterList(
         ) {
             Text(
                 text = "Select your character",
-                style = MaterialTheme.typography.h5 
+                style = MaterialTheme.typography.h5
             )
             LazyColumn(
                 Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
-                items(items = list,
-                    itemContent = { character ->
-                        if (!isEditMode)
-                            CharacterCard(
-                                character = character,
-                                onClick = { onClick(it) },
-                                modifier = Modifier
-                                    .fillMaxWidth(.9f)
-                                    .padding(5.dp),
-                            )
-                        else
-                            EditCharacterCard(
-                                character = character,
-                                onClick = {onClick(it)},
-                                onEditClick = {onEditClick(it)},
-                                modifier = Modifier
-                                    .fillMaxWidth(.9f)
-                                    .padding(5.dp)
-                            )
-                    }
-                )
-            })
+                    items(items = list,
+                        itemContent = { character ->
+                            if (!isEditMode)
+                                CharacterCard(
+                                    character = character,
+                                    onClick = { onClick(it) },
+                                    modifier = Modifier
+                                        .fillMaxWidth(.9f)
+                                        .padding(5.dp),
+                                )
+                            else
+                                EditCharacterCard(
+                                    character = character,
+                                    onClick = { onClick(it) },
+                                    onEditClick = { onEditClick(it) },
+                                    modifier = Modifier
+                                        .fillMaxWidth(.9f)
+                                        .padding(5.dp)
+                                )
+                        }
+                    )
+                })
         }
 
 }
@@ -361,7 +374,7 @@ private fun SpellList(
                                 spell = spell,
                                 onClick = { onClick(spell) },
                                 isEditMode = isEditMode,
-                                onEditClick = {onEditClick(spell)},
+                                onEditClick = { onEditClick(spell) },
                                 modifier = Modifier
                                     .fillMaxWidth(.9f)
                                     .padding(5.dp)
@@ -396,11 +409,11 @@ fun CharacterListPreview() {
             modifyCharacter = {},
         )
         if (showDialog)
-        StorageAccessRationaleDialog(
-            importSpells = {},
-            closeDialog =  {
-                showDialog = false
-            },
-        )
+            StorageAccessRationaleDialog(
+                importSpells = {},
+                closeDialog = {
+                    showDialog = false
+                },
+            )
     }
 }

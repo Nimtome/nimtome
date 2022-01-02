@@ -12,8 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.sampleCharacter
-import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.ui.theme.CardElevation
+import com.nimtome.app.ui.theme.DndSpellsTheme
 
 
 @ExperimentalMaterialApi
@@ -45,8 +45,8 @@ fun EditCharacterCard(
         modifier = modifier,
         elevation = CardElevation
     ) {
-        Row (Modifier.fillMaxWidth()) {
-            IconButton(onClick = {onEditClick(character)}) {
+        Row(Modifier.fillMaxWidth()) {
+            IconButton(onClick = { onEditClick(character) }) {
                 Icon(Icons.Default.Edit, "Edit Character")
             }
             CharacterContent(character = character)
@@ -86,7 +86,7 @@ private fun CharacterContent(character: DndCharacter) {
 private fun CharacterCardPreview() {
 
     DndSpellsTheme {
-        Column (
+        Column(
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -105,7 +105,7 @@ private fun CharacterCardPreview() {
 private fun EditCharacterCardPreview() {
 
     DndSpellsTheme {
-        Column (
+        Column(
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

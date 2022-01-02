@@ -33,7 +33,7 @@ fun MainMenuSpellCard(
     Card(
         elevation = CardElevation,
         modifier = modifier,
-        onClick = {onClick(spell)}
+        onClick = { onClick(spell) }
     ) {
         Column(
             Modifier
@@ -60,7 +60,7 @@ fun MainMenuSpellCard(
 fun SpellCardNormalPreview() {
 
     DndSpellsTheme {
-        Column (
+        Column(
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -73,13 +73,14 @@ fun SpellCardNormalPreview() {
         }
     }
 }
+
 @ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable
 fun SpellCardEditPreview() {
 
     DndSpellsTheme {
-        Column (
+        Column(
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

@@ -8,7 +8,7 @@ import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.repository.CharacterRepository
 import kotlinx.coroutines.launch
 
-class CharacterViewModel: ViewModel() {
+class CharacterViewModel : ViewModel() {
     private val repo: CharacterRepository
 
     val allCharacters: LiveData<List<DndCharacter>>

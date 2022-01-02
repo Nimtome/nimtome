@@ -19,7 +19,7 @@ fun DndTopBar(
     val activity = (LocalContext.current as? Activity)
 
     TopAppBar(
-        title = { Text(text = titleText?: stringResource(id = R.string.app_name)) },
+        title = { Text(text = titleText ?: stringResource(id = R.string.app_name)) },
         elevation = 0.dp,
         backgroundColor = MaterialTheme.colors.primary,
         navigationIcon = {

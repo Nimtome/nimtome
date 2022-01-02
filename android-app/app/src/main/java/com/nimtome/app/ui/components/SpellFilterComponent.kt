@@ -7,8 +7,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.nimtome.app.ui.logic.SpellFilter
 import com.nimtome.app.R
+import com.nimtome.app.ui.logic.SpellFilter
 
 @Composable
 fun SpellFilterComponent(
@@ -52,7 +52,7 @@ fun SpellFilterComponent(
         }
         Slider(
             value = spellFilter.levelFilter / 9,
-            onValueChange = { onSpellFilterChanged(spellFilter.copy(levelFilter = it * 9))},
+            onValueChange = { onSpellFilterChanged(spellFilter.copy(levelFilter = it * 9)) },
             enabled = spellFilter.levelFilterEnabled
         )
 

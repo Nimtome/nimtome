@@ -21,7 +21,7 @@ class SpellRepository(private val spellDao: SpellDao) {
     }
 
     suspend fun delete(spell: Spell) = withContext(Dispatchers.IO) {
-        val roomSpell = spellDao.getSpellByName(spell.name)?: return@withContext
+        val roomSpell = spellDao.getSpellByName(spell.name) ?: return@withContext
         spellDao.deleteSpell(roomSpell)
     }
 
@@ -54,7 +54,19 @@ private fun Spell.toRoomModel(): RoomSpell {
 
 
 fun RoomSpell.toDomainModel(): Spell {
-    return Spell(name, desc, level, components, range, time, school, ritual, duration, classes, roll)
+    return Spell(
+        name,
+        desc,
+        level,
+        components,
+        range,
+        time,
+        school,
+        ritual,
+        duration,
+        classes,
+        roll
+    )
 }
 
 

@@ -3,7 +3,7 @@ package com.nimtome.app.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Spell (
+data class Spell(
     val name: String,
     val desc: String,
     val level: Int,

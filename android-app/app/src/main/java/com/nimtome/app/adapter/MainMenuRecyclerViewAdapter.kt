@@ -12,7 +12,7 @@ import com.nimtome.app.model.DndCharacter
 class MainMenuRecyclerViewAdapter :
     ListAdapter<DndCharacter, MainMenuRecyclerViewAdapter.MainMenuViewHolder>(ItemCallback) {
     companion object {
-        object ItemCallback: DiffUtil.ItemCallback<DndCharacter>() {
+        object ItemCallback : DiffUtil.ItemCallback<DndCharacter>() {
             override fun areItemsTheSame(oldItem: DndCharacter, newItem: DndCharacter): Boolean {
                 return newItem == oldItem
             }
@@ -22,7 +22,8 @@ class MainMenuRecyclerViewAdapter :
             }
         }
     }
-    var itemClickListener : SpellListItemClickListener? = null
+
+    var itemClickListener: SpellListItemClickListener? = null
 
     interface SpellListItemClickListener {
         fun onItemClick(character: DndCharacter, binding: RecyclerviewMainMenuRowBinding)
@@ -39,7 +40,12 @@ class MainMenuRecyclerViewAdapter :
                 character?.let { character -> itemClickListener?.onItemClick(character, binding) }
             }
             itemView.setOnLongClickListener {
-                character?.let { character -> itemClickListener?.onItemLongClick(character, binding)}
+                character?.let { character ->
+                    itemClickListener?.onItemLongClick(
+                        character,
+                        binding
+                    )
+                }
                 true
             }
         }
@@ -50,10 +56,12 @@ class MainMenuRecyclerViewAdapter :
         val character = this.getItem(position)
 
         holder.binding.tvCharacterName.text = character.name
-        holder.binding.tvLevelAndClass.text = "Level ${character.level} ${character.dndClass.legibleName}" //FIXME Ask labvez about i18n
+        holder.binding.tvLevelAndClass.text =
+            "Level ${character.level} ${character.dndClass.legibleName}" //FIXME Ask labvez about i18n
         holder.character = character
 
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MainMenuViewHolder(
         RecyclerviewMainMenuRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )

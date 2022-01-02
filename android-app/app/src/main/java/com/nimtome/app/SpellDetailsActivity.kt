@@ -3,7 +3,9 @@ package com.nimtome.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -23,14 +25,14 @@ import com.nimtome.app.viewmodel.SpellViewModel
 import kotlinx.coroutines.launch
 
 class SpellDetailsActivity : ComponentActivity() {
-    companion object{
+    companion object {
         const val KEY_SPELL_NAME = "KEY_SPELL_NAME"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val spellName = intent.getStringExtra(KEY_SPELL_NAME)?: ""
+        val spellName = intent.getStringExtra(KEY_SPELL_NAME) ?: ""
 
         setContent {
             val spell = ViewModelProvider(this)[SpellViewModel::class.java]
@@ -56,7 +58,7 @@ fun SpellDetails(
     val scaffoldState = rememberScaffoldState()
 
     val youRolled = stringResource(id = R.string.you_rolled)
-    
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -75,7 +77,7 @@ fun SpellDetails(
             }
         },
         scaffoldState = scaffoldState,
-        ) {
+    ) {
         Column(
             Modifier
                 .verticalScroll(rememberScrollState())
@@ -96,7 +98,7 @@ fun SpellAttributes(spell: Spell) {
     )
     Text(
         text = "Spell Level: ${spell.level}",
-    modifier = mod
+        modifier = mod
     )
     Text(
         text = "Time: ${spell.time}",
@@ -118,9 +120,9 @@ fun SpellAttributes(spell: Spell) {
 }
 
 @Composable
-fun SpellDescription(spell: Spell){
+fun SpellDescription(spell: Spell) {
     Text(
-        text = spell.desc.replace("\n\t",""),
+        text = spell.desc.replace("\n\t", ""),
         modifier = Modifier
             .padding(25.dp)
             .fillMaxSize(),

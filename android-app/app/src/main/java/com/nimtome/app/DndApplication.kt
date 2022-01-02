@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.nimtome.app.database.CharacterDatabase
 import com.nimtome.app.database.SpellDatabase
 
-class DndApplication: Application() {
+class DndApplication : Application() {
 
     companion object {
         lateinit var characterDatabase: CharacterDatabase

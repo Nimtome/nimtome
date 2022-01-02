@@ -56,20 +56,23 @@ class CharacterListTopbarColors() : TopAppBarColors {
             scrollFraction = scrollFraction
         )
     }
+
     @Composable
     override fun containerColor(scrollFraction: Float): State<Color> {
         val color = MaterialTheme.colors.primary
-        return remember {mutableStateOf(color)}
+        return remember { mutableStateOf(color) }
     }
 
     @Composable
     override fun navigationIconContentColor(scrollFraction: Float): State<Color> {
-        return TopAppBarDefaults.centerAlignedTopAppBarColors().navigationIconContentColor(scrollFraction = scrollFraction)
+        return TopAppBarDefaults.centerAlignedTopAppBarColors()
+            .navigationIconContentColor(scrollFraction = scrollFraction)
     }
 
     @Composable
     override fun titleContentColor(scrollFraction: Float): State<Color> {
-        return TopAppBarDefaults.centerAlignedTopAppBarColors().titleContentColor(scrollFraction = scrollFraction)
+        return TopAppBarDefaults.centerAlignedTopAppBarColors()
+            .titleContentColor(scrollFraction = scrollFraction)
     }
 
 }

@@ -16,15 +16,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.nimtome.app.adapter.MainMenuRecyclerViewAdapter
+import com.nimtome.app.databinding.ActivityMainBinding
+import com.nimtome.app.databinding.RecyclerviewMainMenuRowBinding
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.Spell
 import com.nimtome.app.model.SpellImporter
-import com.nimtome.app.databinding.ActivityMainBinding
-import com.nimtome.app.databinding.RecyclerviewMainMenuRowBinding
 import com.nimtome.app.viewmodel.CharacterViewModel
 import com.nimtome.app.viewmodel.SpellViewModel
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import java.io.InputStream
 
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(), MainMenuRecyclerViewAdapter.SpellListI
 //        binding.toolbar.title = title
 
         characterViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
-        characterViewModel.allCharacters.observe(this ,{ characters ->
+        characterViewModel.allCharacters.observe(this, { characters ->
             recyclerViewAdapter.submitList(characters)
         })
 

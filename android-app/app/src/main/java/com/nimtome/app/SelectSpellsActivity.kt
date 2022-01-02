@@ -85,7 +85,7 @@ fun SelectSpellsContent(
 
             SpellFilterComponent(
                 spellFilter = spellFilter,
-                onSpellFilterChanged = {spellFilter = it}
+                onSpellFilterChanged = { spellFilter = it }
             )
         },
         scaffoldState = scaffoldState,

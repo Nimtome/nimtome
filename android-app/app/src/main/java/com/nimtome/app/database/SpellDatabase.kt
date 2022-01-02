@@ -8,6 +8,6 @@ import androidx.room.RoomDatabase
     exportSchema = false,
     entities = [RoomSpell::class]
 )
-abstract class SpellDatabase: RoomDatabase() {
+abstract class SpellDatabase : RoomDatabase() {
     abstract fun spellDao(): SpellDao
 }

@@ -1,4 +1,5 @@
 plugins {
+    id "co.uzzu.dotenv.gradle" version "1.2.0"
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
@@ -21,6 +22,9 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField "String", "GISTS_USER", "\"${env.GISTS_USER.value}\""
+        buildConfigField "String", "SPELL_SOURCES_GIST_ID", "\"${env.SPELL_SOURCES_GIST_ID.value}\""
     }
 
     buildFeatures {
@@ -91,4 +95,8 @@ dependencies {
 
     // Coroutine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-simplexml:2.9.0"
 }

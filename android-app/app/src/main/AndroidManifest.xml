@@ -3,6 +3,7 @@
     package="com.nimtome.app">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".DndApplication"
@@ -16,11 +17,10 @@
         <activity
             android:name=".CharacterListActivity"
             android:exported="true"
-            android:label="@string/title_activity_character_list"
+            android:label="@string/app_name"
             android:theme="@style/Theme.DndSpells.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

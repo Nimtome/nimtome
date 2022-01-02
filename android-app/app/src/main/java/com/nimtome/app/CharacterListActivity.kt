@@ -51,13 +51,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.Spell
 import com.nimtome.app.model.SpellImporter
+import com.nimtome.app.model.SpellSource
 import com.nimtome.app.ui.components.CharacterCard
+import com.nimtome.app.ui.components.ImportSpellsButton
 import com.nimtome.app.ui.components.EditCharacterCard
 import com.nimtome.app.ui.components.MainMenuSpellCard
 import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
 import com.nimtome.app.ui.theme.CharacterListTopbarColors
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
+import com.nimtome.app.viewmodel.ISpellSourceViewModel
+import com.nimtome.app.viewmodel.SpellSourceViewModel
 import com.nimtome.app.viewmodel.SpellViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -65,10 +69,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.nimtome.app.viewmodel.mock.MockSpellSourceViewModel
+import kotlinx.coroutines.*
 
 class CharacterListActivity : ComponentActivity() {
     private lateinit var characterViewModel: CharacterViewModel
     private lateinit var spellsViewModel: SpellViewModel
+    private lateinit var spellSourceViewModel: SpellSourceViewModel
 
     @OptIn(DelicateCoroutinesApi::class)
     private val getSpellsFile =
@@ -108,16 +115,18 @@ class CharacterListActivity : ComponentActivity() {
         setContent {
             characterViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
             spellsViewModel = ViewModelProvider(this)[SpellViewModel::class.java]
+            spellSourceViewModel = ViewModelProvider(this)[SpellSourceViewModel::class.java]
 
             val characterList by characterViewModel.allCharacters.observeAsState()
             val spellList by spellsViewModel.allSpells.observeAsState()
+            spellSourceViewModel.fetchSources()
 
             DndSpellsTheme {
                 Surface(color = MaterialTheme.colors.background) {
                     MainActivityContent(
                         characterList = characterList,
                         spellList = spellList,
-                        importSpells = { handleRequestPermission() },
+                        onImportSpellsFromSource = { handleRequestPermission() },
                         addCharacter = {
                             startActivity(
                                 Intent(
@@ -142,6 +151,7 @@ class CharacterListActivity : ComponentActivity() {
                                     .putExtra(SpellDetailsActivity.KEY_SPELL_NAME, it.name)
                             )
                         },
+                        spellSourceViewModel = spellSourceViewModel,
                     )
                     if (showDialog.value)
                         StorageAccessRationaleDialog(
@@ -153,16 +163,16 @@ class CharacterListActivity : ComponentActivity() {
         }
     }
 
-    private fun hasStoragePermissions() : Boolean {
+    private fun hasStoragePermissions(): Boolean {
         return ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            this,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun handleRequestPermission() {
         when {
-             this.hasStoragePermissions() -> {
+            this.hasStoragePermissions() -> {
                 openSpellsFilePicker()
             }
             this.shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
@@ -233,12 +243,13 @@ private const val CARD_FILL_RATIO = .8f
 private fun MainActivityContent(
     characterList: List<DndCharacter>?,
     spellList: List<Spell>?,
-    importSpells: () -> Unit,
+    onImportSpellsFromSource: (spellSource: SpellSource) -> Unit,
     openCharacterDetails: (DndCharacter) -> Unit = {},
     addCharacter: () -> Unit = {},
     modifyCharacter: (DndCharacter) -> Unit = {},
     openSpellDetails: (Spell) -> Unit = {},
     modifySpell: (Spell) -> Unit = {},
+    spellSourceViewModel: ISpellSourceViewModel,
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBackdropScaffoldState(initialValue = BackdropValue.Concealed)
@@ -261,9 +272,12 @@ private fun MainActivityContent(
                     IconButton(onClick = { isEditMode = !isEditMode }) {
                         Icon(Icons.Default.Edit, "Edit")
                     }
-                    IconButton(onClick = { importSpells() }) {
-                        Icon(painterResource(id = R.drawable.application_import), "Import spells")
-                    }
+
+                    ImportSpellsButton(
+                        spellSourceViewModel = spellSourceViewModel,
+                        onImportSpells = onImportSpellsFromSource,
+                    )
+
                     IconButton(onClick = { addCharacter() }) {
                         Icon(Icons.Default.Add, "Add Character")
                     }
@@ -425,6 +439,8 @@ private fun SpellList(
 @Preview(showBackground = true)
 @Composable
 fun CharacterListPreview() {
+    val spellSourceMVM = MockSpellSourceViewModel()
+
     DndSpellsTheme {
         var showDialog by remember {
             mutableStateOf(false)
@@ -432,9 +448,10 @@ fun CharacterListPreview() {
         MainActivityContent(
             characterList = listOf(sampleCharacter),
             spellList = sampleSpells,
-            importSpells = {},
+            onImportSpellsFromSource = {},
             addCharacter = {},
             modifyCharacter = {},
+            spellSourceViewModel = spellSourceMVM
         )
         if (showDialog)
             StorageAccessRationaleDialog(

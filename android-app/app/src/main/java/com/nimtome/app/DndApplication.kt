@@ -28,5 +28,4 @@ class DndApplication : Application() {
         ).fallbackToDestructiveMigration().build()
         super.onCreate()
     }
-
 }

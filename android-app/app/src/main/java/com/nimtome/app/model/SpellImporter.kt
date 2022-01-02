@@ -6,7 +6,7 @@ import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.io.InputStream
 
-
+@Suppress("TooManyFunctions")
 class SpellImporter {
     fun importSpells(fis: InputStream): List<Spell> {
         return parse(fis)
@@ -14,10 +14,10 @@ class SpellImporter {
 
     @Throws(XmlPullParserException::class, IOException::class)
     private fun parse(inputStream: InputStream): List<Spell> {
-        inputStream.use { inputStream ->
+        inputStream.use { istr ->
             val parser = Xml.newPullParser()
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
-            parser.setInput(inputStream, null)
+            parser.setInput(istr, null)
             parser.nextTag()
             return readCompendium(parser)
         }
@@ -41,7 +41,7 @@ class SpellImporter {
     @Throws(XmlPullParserException::class, IOException::class)
     private fun skip(parser: XmlPullParser) {
         if (parser.eventType != XmlPullParser.START_TAG) {
-            throw IllegalStateException()
+            throw IllegalStateException("No start tag")
         }
         var depth = 1
         while (depth != 0) {
@@ -51,8 +51,7 @@ class SpellImporter {
             }
         }
     }
-
-
+    @Suppress("ComplexMethod")
     private fun readSpell(parser: XmlPullParser): Spell {
         parser.require(XmlPullParser.START_TAG, null, "spell")
         var name: String? = null
@@ -66,8 +65,6 @@ class SpellImporter {
         var duration: String? = null
         var classes: String? = null
         var roll: String? = null
-
-
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.eventType != XmlPullParser.START_TAG)
                 continue
@@ -87,7 +84,7 @@ class SpellImporter {
             }
         }
 
-        //maybe throw something if the XML is corrupt
+        // maybe throw something if the XML is corrupt
 
         return Spell(
             name!!,
@@ -179,5 +176,4 @@ class SpellImporter {
         }
         return result
     }
-
 }

@@ -1,4 +1,3 @@
 package com.nimtome.app.model
 
-class DndSubclass {
-}
+class DndSubclass

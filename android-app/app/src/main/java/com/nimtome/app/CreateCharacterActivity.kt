@@ -8,13 +8,29 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,6 +44,7 @@ import com.nimtome.app.model.DndClass
 import com.nimtome.app.ui.components.ClassSelector
 import com.nimtome.app.ui.components.DndTopBar
 import com.nimtome.app.ui.components.LevelSelector
+import com.nimtome.app.ui.logic.MAX_CHARACTER_LEVEL
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -38,7 +55,6 @@ lateinit var characterViewModel: CharacterViewModel
 fun addNewCharacter(character: DndCharacter) {
     characterViewModel.insert(character)
 }
-
 
 class CreateCharacterActivity : ComponentActivity() {
 
@@ -210,16 +226,16 @@ fun CreateCharacterFloatingActionButton(
 }
 
 fun validateCharacter(dndCharacter: DndCharacter): Boolean {
-    //General shit
-
+    // General shit
+    var valid = true
     if (dndCharacter.name.isEmpty())
-        return false
+        valid = false
     if (dndCharacter.dndClass == DndClass.None)
-        return false
-    if (dndCharacter.level > 20 || dndCharacter.level < 0)
-        return false
+        valid = false
+    if (dndCharacter.level > MAX_CHARACTER_LEVEL || dndCharacter.level < 0)
+        valid = false
 
-    return true
+    return valid
 }
 
 @ExperimentalMaterialApi
@@ -229,7 +245,7 @@ fun CharacterDetailList(
     dndCharacter: DndCharacter,
     onChangeDndCharacter: (DndCharacter) -> Unit
 ) {
-    val classList = DndClass.values().toList().subList(0, 11)
+    val classList = DndClass.values().toList().subList(0, DndClass.values().size - 1)
 
     Column {
         OutlinedTextField(
@@ -264,7 +280,6 @@ fun CharacterDetailList(
         )
     }
 }
-
 
 @Composable
 fun MyApp(component: @Composable () -> Unit) {

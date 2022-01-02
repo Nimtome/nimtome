@@ -49,7 +49,7 @@ fun DndSpellsTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
     )
 }
 
-class CharacterListTopbarColors() : TopAppBarColors {
+class CharacterListTopbarColors : TopAppBarColors {
     @Composable
     override fun actionIconContentColor(scrollFraction: Float): State<Color> {
         return TopAppBarDefaults.centerAlignedTopAppBarColors().actionIconContentColor(
@@ -74,5 +74,4 @@ class CharacterListTopbarColors() : TopAppBarColors {
         return TopAppBarDefaults.centerAlignedTopAppBarColors()
             .titleContentColor(scrollFraction = scrollFraction)
     }
-
 }

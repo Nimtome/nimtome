@@ -17,9 +17,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nimtome.app.model.Spell
 import com.nimtome.app.sampleSpells
-import com.nimtome.app.ui.theme.CardElevation
+import com.nimtome.app.ui.theme.CARD_ELEVATION
+import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
 import com.nimtome.app.ui.theme.DndSpellsTheme
-
 
 @ExperimentalMaterialApi
 @Composable
@@ -31,7 +31,7 @@ fun MainMenuSpellCard(
     isEditMode: Boolean = false
 ) {
     Card(
-        elevation = CardElevation,
+        elevation = CARD_ELEVATION,
         modifier = modifier,
         onClick = { onClick(spell) }
     ) {
@@ -67,7 +67,7 @@ fun SpellCardNormalPreview() {
             MainMenuSpellCard(
                 spell = sampleSpells.first(),
                 onClick = {},
-                modifier = Modifier.fillMaxWidth(.9f),
+                modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO),
                 onEditClick = {}
             )
         }
@@ -87,7 +87,7 @@ fun SpellCardEditPreview() {
             MainMenuSpellCard(
                 spell = sampleSpells.first(),
                 onClick = {},
-                modifier = Modifier.fillMaxWidth(.9f),
+                modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO),
                 isEditMode = true,
                 onEditClick = {}
             )

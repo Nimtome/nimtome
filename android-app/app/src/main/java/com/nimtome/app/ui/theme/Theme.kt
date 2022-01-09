@@ -7,10 +7,12 @@ import androidx.compose.material.lightColors
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -47,6 +49,16 @@ fun DndSpellsTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
         shapes = Shapes,
         content = content
     )
+
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = !colors.isLight
+    val systemBarColor = colors.primary
+    SideEffect{
+        systemUiController.setSystemBarsColor(
+            color = systemBarColor,
+            darkIcons = useDarkIcons
+        )
+    }
 }
 
 class CharacterListTopbarColors : TopAppBarColors {

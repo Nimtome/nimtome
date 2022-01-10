@@ -181,7 +181,7 @@ fun EditCharacterFloatingActionButton(
     dndCharacter: DndCharacter,
     activity: CreateCharacterActivity?,
     scope: CoroutineScope,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
 ) {
     val characterErrorText = stringResource(R.string.character_error)
 
@@ -206,7 +206,7 @@ fun CreateCharacterFloatingActionButton(
     dndCharacter: DndCharacter,
     activity: Activity?,
     scope: CoroutineScope,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
 ) {
     val characterErrorText = stringResource(R.string.character_error)
 
@@ -244,7 +244,7 @@ fun validateCharacter(dndCharacter: DndCharacter): Boolean {
 fun CharacterDetailList(
     modifier: Modifier = Modifier,
     dndCharacter: DndCharacter,
-    onChangeDndCharacter: (DndCharacter) -> Unit
+    onChangeDndCharacter: (DndCharacter) -> Unit,
 ) {
     val classList = DndClass.values().toList().subList(0, DndClass.values().size - 1)
 

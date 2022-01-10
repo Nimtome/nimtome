@@ -18,7 +18,7 @@ import com.nimtome.app.R
 @Composable
 fun DndTopBar(
     titleText: String? = null,
-    actions: @Composable RowScope.() -> Unit = {}
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     val activity = (LocalContext.current as? Activity)
 

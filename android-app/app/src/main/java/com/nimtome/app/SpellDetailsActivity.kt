@@ -47,7 +47,8 @@ class SpellDetailsActivity : ComponentActivity() {
                 .observeAsState(Spell())
                 .value
 
-            DndSpellsTheme(darkColors = colorPalette.darkColors, lightColors = colorPalette.lightColors) {
+            DndSpellsTheme(darkColors = colorPalette.darkColors,
+                lightColors = colorPalette.lightColors) {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     SpellDetails(spell = spell)

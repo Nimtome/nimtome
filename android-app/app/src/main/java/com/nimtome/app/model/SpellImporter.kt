@@ -51,6 +51,7 @@ class SpellImporter {
             }
         }
     }
+
     @Suppress("ComplexMethod")
     private fun readSpell(parser: XmlPullParser): Spell {
         parser.require(XmlPullParser.START_TAG, null, "spell")

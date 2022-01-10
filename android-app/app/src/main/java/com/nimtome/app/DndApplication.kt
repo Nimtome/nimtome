@@ -16,15 +16,15 @@ class DndApplication : Application() {
             private set
         lateinit var sharedPreferences: SharedPreferences
             private set
-        const val SP_ID_MAIN = "com.nimtome.nimtome.main"
-        const val SP_COLOR_THEME = "COLOR_THEME"
+        private const val SP_ID_MAIN = "com.nimtome.nimtome.main"
+        private const val SP_COLOR_THEME = "COLOR_THEME"
 
         var colorPalette: ColorPalette
             get() {
                 return ColorPalette.valueOf(
                     sharedPreferences
                         .getString(SP_COLOR_THEME, ColorPalette.Purple.name)
-                        ?:ColorPalette.Purple.name
+                        ?: ColorPalette.Purple.name
                 )
             }
             set(value) {

@@ -28,7 +28,7 @@ fun ColorPaletteSelector(
         backgroundColor = Color.Transparent,
         elevation = 0.dp
     ) {
-        LazyRow (
+        LazyRow(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO)
         ) {
@@ -51,6 +51,6 @@ fun ColorPaletteSelector(
 fun ColorPaletteSelectorPreview() {
     var colorPalette by remember { mutableStateOf(ColorPalette.Purple) }
     Surface {
-        ColorPaletteSelector(selected = colorPalette, onChanged = { colorPalette = it})
+        ColorPaletteSelector(selected = colorPalette, onChanged = { colorPalette = it })
     }
 }

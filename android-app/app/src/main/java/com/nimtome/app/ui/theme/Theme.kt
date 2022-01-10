@@ -13,7 +13,7 @@ fun DndSpellsTheme(
     darkColors: Colors = DarkPurpleColorPalette,
     lightColors: Colors = LightPurpleColorPalette,
     content: @Composable() () -> Unit,
-    ) {
+) {
     val colors = if (darkTheme) {
         darkColors
     } else {
@@ -30,7 +30,7 @@ fun DndSpellsTheme(
     val systemUiController = rememberSystemUiController()
     val useDarkIcons = !colors.isLight
     val systemBarColor = colors.primary
-    SideEffect{
+    SideEffect {
         systemUiController.setStatusBarColor(
             color = systemBarColor,
             darkIcons = useDarkIcons

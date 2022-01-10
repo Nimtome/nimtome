@@ -54,9 +54,9 @@ val LightOrangeColorPalette = lightColors(
 
 )
 
-enum class ColorPalette (
+enum class ColorPalette(
     val darkColors: Colors,
-    val lightColors: Colors
+    val lightColors: Colors,
 ) {
     Orange(DarkOrangeColorPalette, LightOrangeColorPalette),
     Blue(DarkBlueColorPalette, LightBlueColorPalette),

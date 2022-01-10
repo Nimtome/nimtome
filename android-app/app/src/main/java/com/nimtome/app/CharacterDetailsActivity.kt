@@ -66,7 +66,8 @@ class CharacterDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DndSpellsTheme(darkColors = colorPalette.darkColors, lightColors = colorPalette.lightColors) {
+            DndSpellsTheme(darkColors = colorPalette.darkColors,
+                lightColors = colorPalette.lightColors) {
                 // A surface container using the 'background' color from the theme
                 val viewModel = ViewModelProvider(this)
                 val nameInDb = intent.getStringExtra(KEY_NAME) ?: ""
@@ -87,7 +88,7 @@ class CharacterDetailsActivity : ComponentActivity() {
 @Composable
 fun CharacterDetailContent(
     character: DndCharacter = DndCharacter(),
-    spells: List<Spell> = listOf()
+    spells: List<Spell> = listOf(),
 ) {
     val activity = (LocalContext.current as? Activity)
 

@@ -29,6 +29,6 @@ interface CharacterDao {
 
     @Delete
     fun deleteCharacter(
-        character: RoomCharacter
+        character: RoomCharacter,
     )
 }

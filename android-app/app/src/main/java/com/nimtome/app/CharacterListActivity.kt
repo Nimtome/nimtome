@@ -50,8 +50,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.nimtome.app.DndApplication.Companion.SP_COLOR_THEME
-import com.nimtome.app.DndApplication.Companion.SP_ID_MAIN
 import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.Spell
@@ -443,10 +441,9 @@ fun CharacterListPreview() {
         MainActivityContent(
             characterList = listOf(sampleCharacter),
             spellList = sampleSpells,
-            importSpells = {  },
+            importSpells = { },
             colors = ColorPalette.Purple,
             onColorsChange = { }
         )
     }
-
 }

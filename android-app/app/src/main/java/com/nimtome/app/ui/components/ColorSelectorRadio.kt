@@ -14,7 +14,7 @@ fun ColorSelectorRadio(
     selected: Boolean,
     onClick: () -> Unit,
     colors: Colors,
-    backgroundColor: Color = MaterialTheme.colors.background
+    backgroundColor: Color = MaterialTheme.colors.background,
 ) {
     Card(
         shape = CircleShape,
@@ -23,7 +23,8 @@ fun ColorSelectorRadio(
         RadioButton(
             selected = selected,
             onClick = onClick,
-            colors = RadioButtonDefaults.colors(selectedColor = colors.primary, unselectedColor = colors.primary),
+            colors = RadioButtonDefaults.colors(selectedColor = colors.primary,
+                unselectedColor = colors.primary),
         )
     }
 

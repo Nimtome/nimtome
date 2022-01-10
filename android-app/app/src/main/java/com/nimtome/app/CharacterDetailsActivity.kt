@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.CharacterDetailsActivity.Companion.KEY_NAME
+import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.Spell
 import com.nimtome.app.ui.components.DndTopBar
@@ -65,7 +66,7 @@ class CharacterDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DndSpellsTheme {
+            DndSpellsTheme(darkColors = colorPalette.darkColors, lightColors = colorPalette.lightColors) {
                 // A surface container using the 'background' color from the theme
                 val viewModel = ViewModelProvider(this)
                 val nameInDb = intent.getStringExtra(KEY_NAME) ?: ""

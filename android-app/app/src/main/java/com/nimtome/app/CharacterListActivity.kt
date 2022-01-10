@@ -24,6 +24,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -33,6 +34,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -48,14 +50,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.nimtome.app.DndApplication.Companion.SP_COLOR_THEME
+import com.nimtome.app.DndApplication.Companion.SP_ID_MAIN
+import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.Spell
 import com.nimtome.app.model.SpellImporter
 import com.nimtome.app.ui.components.CharacterCard
+import com.nimtome.app.ui.components.ColorPaletteSelector
 import com.nimtome.app.ui.components.EditCharacterCard
 import com.nimtome.app.ui.components.MainMenuSpellCard
 import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
-import com.nimtome.app.ui.theme.CharacterListTopbarColors
+import com.nimtome.app.ui.theme.ColorPalette
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
 import com.nimtome.app.viewmodel.SpellViewModel
@@ -92,7 +98,6 @@ class CharacterListActivity : ComponentActivity() {
                 }
             }
         }
-
     private val getFilePermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -111,8 +116,12 @@ class CharacterListActivity : ComponentActivity() {
 
             val characterList by characterViewModel.allCharacters.observeAsState()
             val spellList by spellsViewModel.allSpells.observeAsState()
+            var colorPalette by remember { mutableStateOf(colorPalette) }
 
-            DndSpellsTheme {
+            DndSpellsTheme(
+                darkColors = colorPalette.darkColors,
+                lightColors = colorPalette.lightColors
+            ) {
                 Surface(color = MaterialTheme.colors.background) {
                     MainActivityContent(
                         characterList = characterList,
@@ -142,6 +151,11 @@ class CharacterListActivity : ComponentActivity() {
                                     .putExtra(SpellDetailsActivity.KEY_SPELL_NAME, it.name)
                             )
                         },
+                        colors = colorPalette,
+                        onColorsChange = {
+                            colorPalette = it
+                            DndApplication.colorPalette = it
+                        }
                     )
                     if (showDialog.value)
                         StorageAccessRationaleDialog(
@@ -222,8 +236,6 @@ private fun StorageAccessRationaleDialog(
     )
 }
 
-private const val CARD_FILL_RATIO = .8f
-
 @Suppress("UnusedPrivateMember")
 @ExperimentalMaterialApi
 @Composable
@@ -236,6 +248,8 @@ private fun MainActivityContent(
     modifyCharacter: (DndCharacter) -> Unit = {},
     openSpellDetails: (Spell) -> Unit = {},
     modifySpell: (Spell) -> Unit = {},
+    colors: ColorPalette,
+    onColorsChange: (ColorPalette) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBackdropScaffoldState(initialValue = BackdropValue.Concealed)
@@ -248,7 +262,7 @@ private fun MainActivityContent(
         appBar = {
             CenterAlignedTopAppBar(
                 title = { Text(text = "D&D spells") },
-                colors = CharacterListTopbarColors(),
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colors.primary),
                 navigationIcon = {
                     IconButton(onClick = { scaffoldState.switch(scope) }) {
                         Icon(Icons.Outlined.Menu, "Open Menu")
@@ -270,26 +284,29 @@ private fun MainActivityContent(
         backLayerContent = {
             Column(
                 Modifier
-                    .fillMaxWidth(CARD_FILL_RATIO)
-                    .selectableGroup()
+                    .fillMaxWidth()
+                    .selectableGroup(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    androidx.compose.material3.RadioButton(
+                    RadioButton(
                         selected = menuSelection == MainMenuElements.SPELLS,
-                        onClick = { menuSelection = MainMenuElements.SPELLS }
+                        onClick = { menuSelection = MainMenuElements.SPELLS },
                     )
 
                     Text("Spells")
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    androidx.compose.material3.RadioButton(
+                    RadioButton(
                         selected = menuSelection == MainMenuElements.CHARACTERS,
                         onClick = { menuSelection = MainMenuElements.CHARACTERS }
                     )
 
                     Text("Characters")
                 }
+
+                ColorPaletteSelector(selected = colors, onChanged = onColorsChange)
 
                 Spacer(modifier = Modifier.padding(bottom = 15.dp))
             }
@@ -423,22 +440,13 @@ private fun SpellList(
 @Composable
 fun CharacterListPreview() {
     DndSpellsTheme {
-        var showDialog by remember {
-            mutableStateOf(false)
-        }
         MainActivityContent(
             characterList = listOf(sampleCharacter),
             spellList = sampleSpells,
-            importSpells = {},
-            addCharacter = {},
-            modifyCharacter = {},
+            importSpells = {  },
+            colors = ColorPalette.Purple,
+            onColorsChange = { }
         )
-        if (showDialog)
-            StorageAccessRationaleDialog(
-                importSpells = {},
-                closeDialog = {
-                    showDialog = false
-                },
-            )
     }
+
 }

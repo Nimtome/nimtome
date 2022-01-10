@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
 import com.nimtome.app.ui.components.ClassSelector
@@ -283,7 +284,7 @@ fun CharacterDetailList(
 
 @Composable
 fun MyApp(component: @Composable () -> Unit) {
-    DndSpellsTheme {
+    DndSpellsTheme(darkColors = colorPalette.darkColors, lightColors = colorPalette.lightColors) {
         // A surface container using the 'background' color from the theme
         Surface(color = MaterialTheme.colors.background) {
             component()

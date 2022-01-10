@@ -205,7 +205,7 @@ enum class MainMenuElements {
 @Composable
 private fun StorageAccessRationaleDialog(
     closeDialog: () -> Unit,
-    importSpells: () -> Unit
+    importSpells: () -> Unit,
 ) {
 
     AlertDialog(
@@ -351,7 +351,7 @@ private fun CharacterList(
     list: List<DndCharacter>?,
     isEditMode: Boolean,
     onClick: (DndCharacter) -> Unit = {},
-    onEditClick: (DndCharacter) -> Unit
+    onEditClick: (DndCharacter) -> Unit,
 ) {
     if (list == null) {
         CircularProgressIndicator()

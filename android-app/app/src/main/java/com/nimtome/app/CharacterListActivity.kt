@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,7 +23,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -57,6 +55,8 @@ import com.nimtome.app.model.SpellImporter
 import com.nimtome.app.ui.components.CharacterCard
 import com.nimtome.app.ui.components.ColorPaletteSelector
 import com.nimtome.app.ui.components.EditCharacterCard
+import com.nimtome.app.ui.components.MainMenuContentSelector
+import com.nimtome.app.ui.components.MainMenuElement
 import com.nimtome.app.ui.components.MainMenuSpellCard
 import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
 import com.nimtome.app.ui.theme.ColorPalette
@@ -197,10 +197,6 @@ class CharacterListActivity : ComponentActivity() {
     }
 }
 
-enum class MainMenuElements {
-    CHARACTERS,
-    SPELLS,
-}
 
 @Composable
 private fun StorageAccessRationaleDialog(
@@ -253,7 +249,7 @@ private fun MainActivityContent(
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBackdropScaffoldState(initialValue = BackdropValue.Concealed)
 
-    var menuSelection by remember { mutableStateOf(MainMenuElements.CHARACTERS) }
+    var menuSelection by remember { mutableStateOf(MainMenuElement.CHARACTERS) }
 
     var isEditMode by remember { mutableStateOf(false) }
 
@@ -287,31 +283,22 @@ private fun MainActivityContent(
                     .selectableGroup(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = menuSelection == MainMenuElements.SPELLS,
-                        onClick = { menuSelection = MainMenuElements.SPELLS },
-                    )
+                MainMenuContentSelector(
+                    modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO),
+                    selectedElement = menuSelection,
+                    onSelectedElementChanged = { menuSelection = it },
+                )
 
-                    Text("Spells")
-                }
+                Spacer(modifier = Modifier.padding(bottom = 5.dp))
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = menuSelection == MainMenuElements.CHARACTERS,
-                        onClick = { menuSelection = MainMenuElements.CHARACTERS }
-                    )
 
-                    Text("Characters")
-                }
-
-                ColorPaletteSelector(selected = colors, onChanged = onColorsChange)
+                ColorPaletteSelector(modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO), selected = colors, onChanged = onColorsChange)
 
                 Spacer(modifier = Modifier.padding(bottom = 15.dp))
             }
         },
         frontLayerContent = {
-            if (menuSelection == MainMenuElements.CHARACTERS)
+            if (menuSelection == MainMenuElement.CHARACTERS)
                 CharacterList(
                     list = characterList,
                     isEditMode = isEditMode,

@@ -20,11 +20,12 @@ import com.nimtome.app.ui.theme.ColorPalette
 
 @Composable
 fun ColorPaletteSelector(
+    modifier: Modifier = Modifier,
     selected: ColorPalette,
     onChanged: (ColorPalette) -> Unit,
 ) {
     Card(
-        Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO),
+        modifier,
         backgroundColor = Color.Transparent,
         elevation = 0.dp
     ) {
@@ -51,6 +52,8 @@ fun ColorPaletteSelector(
 fun ColorPaletteSelectorPreview() {
     var colorPalette by remember { mutableStateOf(ColorPalette.Purple) }
     Surface {
-        ColorPaletteSelector(selected = colorPalette, onChanged = { colorPalette = it })
+        ColorPaletteSelector(selected = colorPalette,
+            onChanged = { colorPalette = it },
+            modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO))
     }
 }

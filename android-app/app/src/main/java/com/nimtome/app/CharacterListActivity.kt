@@ -81,15 +81,16 @@ class CharacterListActivity : ComponentActivity() {
                 GlobalScope.launch {
                     withContext(Dispatchers.IO) {
                         val resolver = this@CharacterListActivity.contentResolver
+                        runCatching {
+                            resolver.openInputStream(uri)?.let { inputStream ->
+                                val importer = SpellImporter()
+                                val spellList = importer.importSpells(inputStream)
 
-                        resolver.openInputStream(uri)?.let { inputStream ->
-                            val importer = SpellImporter()
-                            val spellList = importer.importSpells(inputStream)
-
-                            // Show snakbar
-                            spellsViewModel.nuke()
-                            spellList.forEach { spell ->
-                                spellsViewModel.insert(spell)
+                                //TODO Show snakbar
+                                spellsViewModel.nuke()
+                                spellList.forEach { spell ->
+                                    spellsViewModel.insert(spell)
+                                }
                             }
                         }
                     }

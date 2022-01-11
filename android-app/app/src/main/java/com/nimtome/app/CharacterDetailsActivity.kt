@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -66,19 +67,19 @@ class CharacterDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DndSpellsTheme(darkColors = colorPalette.darkColors,
-                lightColors = colorPalette.lightColors) {
-                // A surface container using the 'background' color from the theme
-                val viewModel = ViewModelProvider(this)
-                val nameInDb = intent.getStringExtra(KEY_NAME) ?: ""
-                val character =
-                    viewModel[CharacterViewModel::class.java].get(nameInDb).observeAsState().value
-                        ?: DndCharacter()
-                val spells =
-                    viewModel[SpellViewModel::class.java].allSpells.observeAsState().value
-                        ?: listOf()
+            val viewModel = ViewModelProvider(this)
+            val nameInDb = intent.getStringExtra(KEY_NAME) ?: ""
+            val character by viewModel[CharacterViewModel::class.java].get(nameInDb).observeAsState()
+            val preferredColorPalette = character?.preferredColorPalette ?: colorPalette
+
+            val spells by viewModel[SpellViewModel::class.java].allSpells.observeAsState()
+
+            DndSpellsTheme(
+                darkColors = preferredColorPalette.darkColors,
+                lightColors = preferredColorPalette.lightColors
+            ) {
                 Surface(color = MaterialTheme.colors.background) {
-                    CharacterDetailContent(character, spells)
+                    CharacterDetailContent(character?: DndCharacter(), spells ?: listOf())
                 }
             }
         }

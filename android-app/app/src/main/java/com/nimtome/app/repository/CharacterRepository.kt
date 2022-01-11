@@ -6,6 +6,7 @@ import com.nimtome.app.database.CharacterDao
 import com.nimtome.app.database.RoomCharacter
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
+import com.nimtome.app.ui.theme.ColorPalette
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -49,7 +50,8 @@ private fun DndCharacter.toRoomDomain(): RoomCharacter {
         level = level,
         dndClass = dndClass.legibleName,
         spellNameList = spellNameList,
-        id = id
+        id = id,
+        preferredColorPaletteName = preferredColorPalette.name
     )
 }
 
@@ -65,6 +67,7 @@ private fun RoomCharacter.toDomainModel(): DndCharacter {
         level = level,
         id = id,
         spellList = spellNameList.split('\n'),
-        dndClass = characterClass
+        dndClass = characterClass,
+        preferredColorPalette = ColorPalette.valueOf(preferredColorPaletteName)
     )
 }

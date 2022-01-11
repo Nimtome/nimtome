@@ -4,7 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,9 +45,11 @@ import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
 import com.nimtome.app.ui.components.ClassSelector
+import com.nimtome.app.ui.components.ColorPaletteSelector
 import com.nimtome.app.ui.components.DndTopBar
 import com.nimtome.app.ui.components.LevelSelector
 import com.nimtome.app.ui.logic.MAX_CHARACTER_LEVEL
+import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -279,6 +283,16 @@ fun CharacterDetailList(
                 onChangeDndCharacter(dndCharacter.copy(level = it))
             },
         )
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            ColorPaletteSelector(
+                modifier = modifier,
+                selected = dndCharacter.preferredColorPalette,
+                onChanged = {onChangeDndCharacter(dndCharacter.copy(preferredColorPalette = it))}
+            )
+        }
     }
 }
 

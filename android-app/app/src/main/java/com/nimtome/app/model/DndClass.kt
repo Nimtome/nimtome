@@ -12,5 +12,6 @@ enum class DndClass(val legibleName: String) {
     Sorcerer("Sorcerer"),
     Warlock("Warlock"),
     Wizard("Wizard"),
-    None("None"), ;
+    None("None"),
+    ;
 }

@@ -21,7 +21,7 @@ fun ClassSelector(
     modifier: Modifier,
     allClasses: List<DndClass>,
     onClassChange: (DndClass) -> Unit,
-    starterClass: DndClass
+    starterClass: DndClass,
 ) {
     var expandedState by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(starterClass) }

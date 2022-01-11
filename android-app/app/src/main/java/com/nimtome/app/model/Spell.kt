@@ -11,7 +11,7 @@ data class Spell(
     val ritual: Boolean,
     val duration: String,
     val classes: String,
-    val roll: String?
+    val roll: String?,
 ) {
     constructor() : this(
         name = "",

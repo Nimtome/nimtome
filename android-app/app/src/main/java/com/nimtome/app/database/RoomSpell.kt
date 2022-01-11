@@ -18,5 +18,5 @@ data class RoomSpell(
     val ritual: Boolean,
     val duration: String,
     val classes: String,
-    val roll: String?
+    val roll: String?,
 )

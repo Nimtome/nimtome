@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +32,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -48,14 +48,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.Spell
 import com.nimtome.app.model.SpellImporter
 import com.nimtome.app.ui.components.CharacterCard
+import com.nimtome.app.ui.components.ColorPaletteSelector
 import com.nimtome.app.ui.components.EditCharacterCard
+import com.nimtome.app.ui.components.MainMenuContentSelector
+import com.nimtome.app.ui.components.MainMenuElement
 import com.nimtome.app.ui.components.MainMenuSpellCard
 import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
-import com.nimtome.app.ui.theme.CharacterListTopbarColors
+import com.nimtome.app.ui.theme.ColorPalette
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
 import com.nimtome.app.viewmodel.SpellViewModel
@@ -77,22 +81,22 @@ class CharacterListActivity : ComponentActivity() {
                 GlobalScope.launch {
                     withContext(Dispatchers.IO) {
                         val resolver = this@CharacterListActivity.contentResolver
+                        runCatching {
+                            resolver.openInputStream(uri)?.let { inputStream ->
+                                val importer = SpellImporter()
+                                val spellList = importer.importSpells(inputStream)
 
-                        resolver.openInputStream(uri)?.let { inputStream ->
-                            val importer = SpellImporter()
-                            val spellList = importer.importSpells(inputStream)
-
-                            // Show snakbar
-                            spellsViewModel.nuke()
-                            spellList.forEach { spell ->
-                                spellsViewModel.insert(spell)
+                                //TODO Show snakbar
+                                spellsViewModel.nuke()
+                                spellList.forEach { spell ->
+                                    spellsViewModel.insert(spell)
+                                }
                             }
                         }
                     }
                 }
             }
         }
-
     private val getFilePermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -111,8 +115,12 @@ class CharacterListActivity : ComponentActivity() {
 
             val characterList by characterViewModel.allCharacters.observeAsState()
             val spellList by spellsViewModel.allSpells.observeAsState()
+            var colorPalette by remember { mutableStateOf(colorPalette) }
 
-            DndSpellsTheme {
+            DndSpellsTheme(
+                darkColors = colorPalette.darkColors,
+                lightColors = colorPalette.lightColors
+            ) {
                 Surface(color = MaterialTheme.colors.background) {
                     MainActivityContent(
                         characterList = characterList,
@@ -142,6 +150,11 @@ class CharacterListActivity : ComponentActivity() {
                                     .putExtra(SpellDetailsActivity.KEY_SPELL_NAME, it.name)
                             )
                         },
+                        colors = colorPalette,
+                        onColorsChange = {
+                            colorPalette = it
+                            DndApplication.colorPalette = it
+                        }
                     )
                     if (showDialog.value)
                         StorageAccessRationaleDialog(
@@ -184,15 +197,11 @@ class CharacterListActivity : ComponentActivity() {
     }
 }
 
-enum class MainMenuElements {
-    CHARACTERS,
-    SPELLS,
-}
 
 @Composable
 private fun StorageAccessRationaleDialog(
     closeDialog: () -> Unit,
-    importSpells: () -> Unit
+    importSpells: () -> Unit,
 ) {
 
     AlertDialog(
@@ -222,8 +231,6 @@ private fun StorageAccessRationaleDialog(
     )
 }
 
-private const val CARD_FILL_RATIO = .8f
-
 @Suppress("UnusedPrivateMember")
 @ExperimentalMaterialApi
 @Composable
@@ -236,11 +243,13 @@ private fun MainActivityContent(
     modifyCharacter: (DndCharacter) -> Unit = {},
     openSpellDetails: (Spell) -> Unit = {},
     modifySpell: (Spell) -> Unit = {},
+    colors: ColorPalette,
+    onColorsChange: (ColorPalette) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBackdropScaffoldState(initialValue = BackdropValue.Concealed)
 
-    var menuSelection by remember { mutableStateOf(MainMenuElements.CHARACTERS) }
+    var menuSelection by remember { mutableStateOf(MainMenuElement.CHARACTERS) }
 
     var isEditMode by remember { mutableStateOf(false) }
 
@@ -248,7 +257,7 @@ private fun MainActivityContent(
         appBar = {
             CenterAlignedTopAppBar(
                 title = { Text(text = "D&D spells") },
-                colors = CharacterListTopbarColors(),
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colors.primary),
                 navigationIcon = {
                     IconButton(onClick = { scaffoldState.switch(scope) }) {
                         Icon(Icons.Outlined.Menu, "Open Menu")
@@ -270,32 +279,26 @@ private fun MainActivityContent(
         backLayerContent = {
             Column(
                 Modifier
-                    .fillMaxWidth(CARD_FILL_RATIO)
-                    .selectableGroup()
+                    .fillMaxWidth()
+                    .selectableGroup(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    androidx.compose.material3.RadioButton(
-                        selected = menuSelection == MainMenuElements.SPELLS,
-                        onClick = { menuSelection = MainMenuElements.SPELLS }
-                    )
+                MainMenuContentSelector(
+                    modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO),
+                    selectedElement = menuSelection,
+                    onSelectedElementChanged = { menuSelection = it },
+                )
 
-                    Text("Spells")
-                }
+                Spacer(modifier = Modifier.padding(bottom = 5.dp))
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    androidx.compose.material3.RadioButton(
-                        selected = menuSelection == MainMenuElements.CHARACTERS,
-                        onClick = { menuSelection = MainMenuElements.CHARACTERS }
-                    )
 
-                    Text("Characters")
-                }
+                ColorPaletteSelector(modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO), selected = colors, onChanged = onColorsChange)
 
                 Spacer(modifier = Modifier.padding(bottom = 15.dp))
             }
         },
         frontLayerContent = {
-            if (menuSelection == MainMenuElements.CHARACTERS)
+            if (menuSelection == MainMenuElement.CHARACTERS)
                 CharacterList(
                     list = characterList,
                     isEditMode = isEditMode,
@@ -335,7 +338,7 @@ private fun CharacterList(
     list: List<DndCharacter>?,
     isEditMode: Boolean,
     onClick: (DndCharacter) -> Unit = {},
-    onEditClick: (DndCharacter) -> Unit
+    onEditClick: (DndCharacter) -> Unit,
 ) {
     if (list == null) {
         CircularProgressIndicator()
@@ -423,22 +426,12 @@ private fun SpellList(
 @Composable
 fun CharacterListPreview() {
     DndSpellsTheme {
-        var showDialog by remember {
-            mutableStateOf(false)
-        }
         MainActivityContent(
             characterList = listOf(sampleCharacter),
             spellList = sampleSpells,
-            importSpells = {},
-            addCharacter = {},
-            modifyCharacter = {},
+            importSpells = { },
+            colors = ColorPalette.Purple,
+            onColorsChange = { }
         )
-        if (showDialog)
-            StorageAccessRationaleDialog(
-                importSpells = {},
-                closeDialog = {
-                    showDialog = false
-                },
-            )
     }
 }

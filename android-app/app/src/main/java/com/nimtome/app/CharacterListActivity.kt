@@ -58,6 +58,7 @@ import com.nimtome.app.ui.components.EditCharacterCard
 import com.nimtome.app.ui.components.MainMenuContentSelector
 import com.nimtome.app.ui.components.MainMenuElement
 import com.nimtome.app.ui.components.MainMenuSpellCard
+import com.nimtome.app.ui.components.NimtomeApp
 import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
 import com.nimtome.app.ui.theme.ColorPalette
 import com.nimtome.app.ui.theme.DndSpellsTheme
@@ -117,7 +118,7 @@ class CharacterListActivity : ComponentActivity() {
             val spellList by spellsViewModel.allSpells.observeAsState()
             var colorPalette by remember { mutableStateOf(colorPalette) }
 
-            DndSpellsTheme(
+            NimtomeApp(
                 darkColors = colorPalette.darkColors,
                 lightColors = colorPalette.lightColors
             ) {

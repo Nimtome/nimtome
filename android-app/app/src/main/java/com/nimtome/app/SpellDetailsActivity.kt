@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.Spell
 import com.nimtome.app.ui.components.DndTopBar
+import com.nimtome.app.ui.components.NimtomeApp
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.SpellViewModel
 import kotlinx.coroutines.launch
@@ -48,7 +49,7 @@ class SpellDetailsActivity : ComponentActivity() {
                 .get(spellName)
                 .observeAsState(Spell())
 
-            DndSpellsTheme(
+            NimtomeApp(
                 darkColors = colorPalette.darkColors,
                 lightColors = colorPalette.lightColors,
             ) {
@@ -141,7 +142,7 @@ fun SpellDescription(spell: Spell) {
 @Composable
 fun SpellDetailsPreview() {
     DndSpellsTheme {
-        SpellDetails(Spell())
+        SpellDetails(sampleSpells[0])
     }
 }
 
@@ -149,6 +150,6 @@ fun SpellDetailsPreview() {
 @Composable
 fun SpellDetailsDarkPreview() {
     DndSpellsTheme(darkTheme = true) {
-        SpellDetails(Spell())
+        SpellDetails(sampleSpells[0])
     }
 }

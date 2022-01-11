@@ -40,6 +40,7 @@ import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.Spell
 import com.nimtome.app.ui.components.DndTopBar
+import com.nimtome.app.ui.components.NimtomeApp
 import com.nimtome.app.ui.components.SpellContent
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
@@ -74,7 +75,7 @@ class CharacterDetailsActivity : ComponentActivity() {
 
             val spells by viewModel[SpellViewModel::class.java].allSpells.observeAsState()
 
-            DndSpellsTheme(
+            NimtomeApp(
                 darkColors = preferredColorPalette.darkColors,
                 lightColors = preferredColorPalette.lightColors
             ) {

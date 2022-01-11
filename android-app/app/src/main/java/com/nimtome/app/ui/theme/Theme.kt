@@ -4,8 +4,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun DndSpellsTheme(
@@ -26,19 +24,4 @@ fun DndSpellsTheme(
         shapes = Shapes,
         content = content
     )
-
-    val systemUiController = rememberSystemUiController()
-    val useDarkIcons = !colors.isLight
-    val systemBarColor = colors.primary
-
-    SideEffect {
-        systemUiController.setStatusBarColor(
-            color = systemBarColor,
-            darkIcons = useDarkIcons
-        )
-
-        systemUiController.setNavigationBarColor(
-            color = colors.background,
-        )
-    }
 }

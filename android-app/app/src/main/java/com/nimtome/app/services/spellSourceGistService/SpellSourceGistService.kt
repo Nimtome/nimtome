@@ -61,4 +61,8 @@ class SpellSourceGistService {
                 }
             })
     }
+
+    fun fetchSpellsFromSource() {
+        
+    }
 }

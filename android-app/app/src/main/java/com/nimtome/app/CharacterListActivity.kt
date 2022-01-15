@@ -42,7 +42,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -126,7 +125,7 @@ class CharacterListActivity : ComponentActivity() {
                     MainActivityContent(
                         characterList = characterList,
                         spellList = spellList,
-                        onImportSpellsFromSource = { handleRequestPermission() },
+                        onImportSpellsFromSource = { tryImportingSpellsFromFile() },
                         addCharacter = {
                             startActivity(
                                 Intent(
@@ -170,7 +169,16 @@ class CharacterListActivity : ComponentActivity() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun handleRequestPermission() {
+    private fun importSpellsFromSource(source: SpellSource) {
+        if (source.isFromFile) {
+            this.tryImportingSpellsFromFile()
+            return
+        }
+        
+
+    }
+
+    private fun tryImportingSpellsFromFile() {
         when {
             this.hasStoragePermissions() -> {
                 openSpellsFilePicker()

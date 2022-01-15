@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nimtome.app.DndApplication
 import com.nimtome.app.model.Spell
+import com.nimtome.app.model.SpellSource
 import com.nimtome.app.repository.SpellRepository
 import kotlinx.coroutines.launch
 
@@ -33,5 +34,9 @@ class SpellViewModel : ViewModel() {
 
     fun get(spellName: String): LiveData<Spell> {
         return repo.getSpellByName(spellName)
+    }
+
+    fun importFromSource(spellSource: SpellSource) {
+        
     }
 }

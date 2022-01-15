@@ -14,7 +14,7 @@ class CharacterViewModel : ViewModel() {
     val allCharacters: LiveData<List<DndCharacter>>
 
     init {
-        val characterDao = DndApplication.characterDatabase.characterDao()
+        val characterDao = DndApplication.nimtomeDatabase.characterDao()
         repo = CharacterRepository(characterDao)
         allCharacters = repo.getAllCharacters()
     }

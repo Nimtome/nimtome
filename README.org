@@ -1,0 +1,33 @@
+#+TITLE: Nimtome: An open source application to manage all your spells in D&D
+
+* About
+This project came to life as a homework assignment, but it became a +lot+ bit more.
+The application is made using only with the latest and greatest stuff the Android platform has to offer.
+
+** TODO Screenshots
+/TODO/
+
+* Getting the app
+We will publish a release here on GitHub shortly, but until then your best bet is to consult Building.
+* Aim
+Our current goal is to ship a version that is usable for anyone that is a bit techie and doesn't mind a few bugs here and there.
+
+We'd like to create an open source alternative to FightClub or 5E spells with feature parity.
+
+* Contributing
+See CONTRIBUTING.org .
+
+This work is GPL licenced, so keep that in mind if you would like to fork this project for SW5e or other RPG-s. With that in mind Nimtome is heavily dependent on FightClub's XML spec and that is not likely to change in the future.
+
+* Obtaining the spell list
+We are in the process of creating a download option for the spells included in 5E SRD as well as community-made XML files as long as it doesn't get *us* into trouble.
+
+Right now your best bet is The Archivist's spell list that is available on gumroad.
+These spells won't look /just right/ in Nimtome as they are a bit all over the place.
+WIP: We've created a python script that converts that (or any) spell list made for FC to a much more computer friendly version.
+
+* Building
+Dependencies and building are managed by gradle and Android Stuido. You can clone this project and build it locally like any android project.
+
+* Documentation
+No.

@@ -1,0 +1,3 @@
+[submodule "scripts/spell-cleaner"]
+	path = scripts/spell-cleaner
+	url = git@github.com:Nimtome/spell-cleaner.git

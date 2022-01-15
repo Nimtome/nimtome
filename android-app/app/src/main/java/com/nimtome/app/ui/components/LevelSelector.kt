@@ -43,7 +43,7 @@ private const val LEVELS_COUNT = 20f
 @Composable
 private fun LevelSlider(
     starterValue: Int,
-    onValueChange: (Int) -> Unit
+    onValueChange: (Int) -> Unit,
 ) {
     var sliderPosition by remember { mutableStateOf(starterValue / LEVELS_COUNT) }
 

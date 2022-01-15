@@ -28,7 +28,7 @@ fun MainMenuSpellCard(
     modifier: Modifier = Modifier,
     onClick: (Spell) -> Unit,
     onEditClick: (Spell) -> Unit,
-    isEditMode: Boolean = false
+    isEditMode: Boolean = false,
 ) {
     Card(
         elevation = CARD_ELEVATION,

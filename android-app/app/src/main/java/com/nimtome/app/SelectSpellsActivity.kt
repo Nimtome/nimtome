@@ -77,7 +77,7 @@ class SelectSpellsActivity : ComponentActivity() {
 fun SelectSpellsContent(
     spells: List<Spell>,
     character: DndCharacter,
-    updateCharacter: (DndCharacter) -> Unit = {}
+    updateCharacter: (DndCharacter) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -148,7 +148,7 @@ fun SelectSpellsContent(
 private fun SpellCardWithCheckBox(
     spell: Spell,
     checked: Boolean,
-    onCheck: (Boolean) -> Unit
+    onCheck: (Boolean) -> Unit,
 ) {
     Card(
         modifier = Modifier

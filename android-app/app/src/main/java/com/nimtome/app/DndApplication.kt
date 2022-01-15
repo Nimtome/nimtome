@@ -3,16 +3,13 @@ package com.nimtome.app
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.nimtome.app.database.CharacterDatabase
-import com.nimtome.app.database.SpellDatabase
+import com.nimtome.app.database.NimtomeDatabase
 import com.nimtome.app.ui.theme.ColorPalette
 
 class DndApplication : Application() {
 
     companion object {
-        lateinit var characterDatabase: CharacterDatabase
-            private set
-        lateinit var spellDatabase: SpellDatabase
+        lateinit var nimtomeDatabase: NimtomeDatabase
             private set
         lateinit var sharedPreferences: SharedPreferences
             private set
@@ -36,17 +33,11 @@ class DndApplication : Application() {
     }
 
     override fun onCreate() {
-        spellDatabase = Room.databaseBuilder(
+        nimtomeDatabase = Room.databaseBuilder(
             applicationContext,
-            SpellDatabase::class.java,
-            "spell_database",
-        ).fallbackToDestructiveMigration().build()
-
-        characterDatabase = Room.databaseBuilder(
-            applicationContext,
-            CharacterDatabase::class.java,
-            "character_database",
-        ).fallbackToDestructiveMigration().build()
+            NimtomeDatabase::class.java,
+            "nimtome_database"
+        ).build()
 
         sharedPreferences = getSharedPreferences(SP_ID_MAIN, MODE_PRIVATE)
         super.onCreate()

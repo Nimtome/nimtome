@@ -14,7 +14,7 @@ class SpellViewModel : ViewModel() {
     val allSpells: LiveData<List<Spell>>
 
     init {
-        val spellDao = DndApplication.spellDatabase.spellDao()
+        val spellDao = DndApplication.nimtomeDatabase.spellDao()
         repo = SpellRepository(spellDao)
         allSpells = repo.getAllSpells()
     }

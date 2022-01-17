@@ -1,5 +1,6 @@
 package com.nimtome.app.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -7,6 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "spells", indices = [Index(value = ["name"], unique = true)])
 data class RoomSpell(
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "spellId")
     val id: Int = 0,
     val name: String,
     val desc: String,

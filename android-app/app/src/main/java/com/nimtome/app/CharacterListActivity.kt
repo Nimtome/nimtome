@@ -136,18 +136,18 @@ class CharacterListActivity : ComponentActivity() {
                         },
                         modifyCharacter = {
                             val intent = Intent(this, CreateCharacterActivity::class.java)
-                            intent.putExtra(CreateCharacterActivity.KEY_CHARACTER_NAME, it.name)
+                            intent.putExtra(CreateCharacterActivity.KEY_CHARACTER_ID, it.id)
                             startActivity(intent)
                         },
                         openCharacterDetails = {
                             val intent = Intent(this, CharacterDetailsActivity::class.java)
-                            intent.putExtra(CharacterDetailsActivity.KEY_NAME, it.name)
+                            intent.putExtra(CharacterDetailsActivity.KEY_CHR_ID, it.id)
                             startActivity(intent)
                         },
                         openSpellDetails = {
                             startActivity(
                                 Intent(this, SpellDetailsActivity::class.java)
-                                    .putExtra(SpellDetailsActivity.KEY_SPELL_NAME, it.name)
+                                    .putExtra(SpellDetailsActivity.KEY_SPELL_ID, it.id)
                             )
                         },
                         colors = colorPalette,
@@ -290,7 +290,6 @@ private fun MainActivityContent(
                 )
 
                 Spacer(modifier = Modifier.padding(bottom = 5.dp))
-
 
                 ColorPaletteSelector(modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO), selected = colors, onChanged = onColorsChange)
 

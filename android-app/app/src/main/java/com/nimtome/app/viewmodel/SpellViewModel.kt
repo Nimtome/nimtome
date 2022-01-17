@@ -9,15 +9,9 @@ import com.nimtome.app.repository.SpellRepository
 import kotlinx.coroutines.launch
 
 class SpellViewModel : ViewModel() {
-    private val repo: SpellRepository
+    private val repo = SpellRepository(DndApplication.nimtomeDatabase.nimtomeDao())
 
-    val allSpells: LiveData<List<Spell>>
-
-    init {
-        val spellDao = DndApplication.nimtomeDatabase.spellDao()
-        repo = SpellRepository(spellDao)
-        allSpells = repo.getAllSpells()
-    }
+    val allSpells: LiveData<List<Spell>> = repo.getAllSpells()
 
     fun insert(spell: Spell) = viewModelScope.launch {
         repo.insert(spell)
@@ -31,7 +25,7 @@ class SpellViewModel : ViewModel() {
         repo.nuke()
     }
 
-    fun get(spellName: String): LiveData<Spell> {
-        return repo.getSpellByName(spellName)
+    fun get(spellId: Int): LiveData<Spell> {
+        return repo.getSpell(spellId)
     }
 }

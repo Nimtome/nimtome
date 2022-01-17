@@ -33,17 +33,17 @@ import kotlinx.coroutines.launch
 
 class SpellDetailsActivity : ComponentActivity() {
     companion object {
-        const val KEY_SPELL_NAME = "KEY_SPELL_NAME"
+        const val KEY_SPELL_ID = "KEY_SPELL_ID"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val spellName = intent.getStringExtra(KEY_SPELL_NAME) ?: ""
+        val spellId = intent.getIntExtra(KEY_SPELL_ID, 0)
 
         setContent {
             val spell = ViewModelProvider(this)[SpellViewModel::class.java]
-                .get(spellName)
+                .get(spellId)
                 .observeAsState(Spell())
                 .value
 

@@ -2,69 +2,58 @@ package com.nimtome.app.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import com.nimtome.app.database.CharacterDao
+import com.nimtome.app.database.NimtomeDao
 import com.nimtome.app.database.RoomCharacter
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
+import com.nimtome.app.model.Spell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class CharacterRepository(
-    private val characterDao: CharacterDao,
-) {
+class CharacterRepository(private val nimtomeDao: NimtomeDao) {
+
     fun getAllCharacters(): LiveData<List<DndCharacter>> {
-        return characterDao.getAllCharacters().map {
-            it.map { roomCharacter -> roomCharacter.toDomainModel() }
+        return nimtomeDao.getAllCharacters().map {
+            it.map { roomCharacter ->
+                roomCharacter.toDomainModel()
+            }
         }
     }
 
     suspend fun insert(character: DndCharacter) = withContext(Dispatchers.IO) {
-        if (characterDao.getCharacterByName(character.name) == null)
-            characterDao.addCharacter(character.toRoomDomain())
+        nimtomeDao.addCharacter(character.toRoomDomain())
     }
 
     suspend fun delete(character: DndCharacter) = withContext(Dispatchers.IO) {
-        val roomCharacter = characterDao.getCharacter(character.id)
-        roomCharacter?.let { characterDao.deleteCharacter(roomCharacter) }
+        val roomCharacter = nimtomeDao.getCharacter(character.id)
+        roomCharacter?.let { nimtomeDao.deleteCharacter(roomCharacter) }
     }
 
-    fun get(name: String): LiveData<DndCharacter> {
-        return characterDao.getCharacterLiveDataByName(name).map { it.toDomainModel() }
+    fun get(id: Int): LiveData<DndCharacter?> {
+        return nimtomeDao.getCharacterLiveData(id).map {
+            it?.let { it.toDomainModel() }
+        }
     }
 
     suspend fun update(character: DndCharacter) = withContext(Dispatchers.IO) {
-        val roomCharacter = character.toRoomDomain()
-        characterDao.updateCharacter(roomCharacter)
+        nimtomeDao.updateCharacter(character.toRoomDomain())
     }
 }
 
-private fun DndCharacter.toRoomDomain(): RoomCharacter {
-    var spellNameList = ""
-    spellList.forEach {
-        spellNameList += "\n"
-        spellNameList += it
-    }
+fun DndCharacter.toRoomDomain(): RoomCharacter {
     return RoomCharacter(
         name = name,
         level = level,
-        dndClass = dndClass.legibleName,
-        spellNameList = spellNameList,
-        id = id
+        dndClass = dndClass.name,
+        characterId = id
     )
 }
 
 private fun RoomCharacter.toDomainModel(): DndCharacter {
-    var characterClass: DndClass = DndClass.None
-    DndClass.values().forEach {
-        if (it.legibleName == dndClass) {
-            characterClass = it
-        }
-    }
     return DndCharacter(
         name = name,
         level = level,
-        id = id,
-        spellList = spellNameList.split('\n'),
-        dndClass = characterClass
+        dndClass = DndClass.valueOf(dndClass),
+        id = characterId,
     )
 }

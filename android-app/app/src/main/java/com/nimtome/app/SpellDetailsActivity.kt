@@ -35,14 +35,14 @@ import kotlinx.coroutines.launch
 
 class SpellDetailsActivity : ComponentActivity() {
     companion object {
-        const val KEY_SPELL_NAME = "KEY_SPELL_NAME"
+        const val KEY_SPELL_ID = "KEY_SPELL_ID"
         const val KEY_COLOR_OVERRIDE = "KEY_COLOR_OVERRIDE"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val spellName = intent.getStringExtra(KEY_SPELL_NAME) ?: ""
+        val spellId = intent.getIntExtra(KEY_SPELL_ID, 0)
 
         setContent {
             val spell by ViewModelProvider(this)[SpellViewModel::class.java]

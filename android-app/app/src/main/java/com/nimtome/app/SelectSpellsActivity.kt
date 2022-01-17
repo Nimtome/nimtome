@@ -36,8 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.nimtome.app.CharacterDetailsActivity.Companion.KEY_NAME
-import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
 import com.nimtome.app.model.Spell
@@ -47,33 +45,40 @@ import com.nimtome.app.ui.components.SpellContent
 import com.nimtome.app.ui.components.SpellFilterComponent
 import com.nimtome.app.ui.logic.SpellFilter
 import com.nimtome.app.ui.theme.DndSpellsTheme
+import com.nimtome.app.viewmodel.CharacterSpellViewModel
 import com.nimtome.app.viewmodel.CharacterViewModel
 import com.nimtome.app.viewmodel.SpellViewModel
 import kotlinx.coroutines.launch
 
 class SelectSpellsActivity : ComponentActivity() {
 
+    companion object{
+        const val KEY_CHR_ID = "KEY_CHR_ID"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             val vmp = ViewModelProvider(this)
-            val spells by vmp[SpellViewModel::class.java].allSpells.observeAsState(listOf())
-            val characterName = intent.getStringExtra(KEY_NAME) ?: ""
-            val character by vmp[CharacterViewModel::class.java].get(characterName).observeAsState()
+            val spells =
+                vmp[SpellViewModel::class.java].allSpells.observeAsState().value ?: listOf()
+            val characterId = intent.getIntExtra(KEY_CHR_ID,0)
+            val character by
+                vmp[CharacterViewModel::class.java].get(characterId).observeAsState(DndCharacter())
 
-            val preferredColorPalette = character?.preferredColorPalette ?: colorPalette
             NimtomeApp(
                 darkColors = preferredColorPalette.darkColors,
                 lightColors = preferredColorPalette.lightColors,
             ) {
                 SelectSpellsContent(
                     spells = spells,
-                    character = character ?: DndCharacter(),
-                    updateCharacter = { vmp[CharacterViewModel::class.java].update(it) }
+                    character = character,
+                    updateCharacter = { vmp[CharacterViewModel::class.java].update(it) },
+                    updateSpells =  { vmp[CharacterSpellViewModel::class.java].submitSpellist(character, it) }
                 )
             }
-        }
+
     }
 }
 
@@ -83,6 +88,7 @@ fun SelectSpellsContent(
     spells: List<Spell>,
     character: DndCharacter,
     updateCharacter: (DndCharacter) -> Unit = {},
+    updateSpells: (List<Spell>) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -132,15 +138,15 @@ fun SelectSpellsContent(
                 itemContent = { spell ->
                     SpellCardWithCheckBox(
                         spell = spell,
-                        checked = character.spellList.contains(spell.name),
+                        checked = spells.contains(spell),
                         onCheck = { newContains ->
-                            val newSpellList = character.spellList.toMutableList()
-                            if (newContains && !newSpellList.contains(spell.name)) {
-                                newSpellList.add(spell.name)
-                            } else if (newSpellList.contains(spell.name)) {
-                                newSpellList.remove(spell.name)
+                            val mutableSpells = spells.toMutableList()
+                            if (newContains) {
+                                mutableSpells.add(spell)
+                            } else {
+                                mutableSpells.remove(spell)
                             }
-                            updateCharacter(character.copy(spellList = newSpellList))
+                            updateSpells(mutableSpells)
                         }
                     )
                 }
@@ -195,7 +201,6 @@ val sampleCharacter = DndCharacter(
     name = "Ba'luk",
     level = 4,
     dndClass = DndClass.Druid,
-    spellList = listOf("Power Word Kill")
 )
 
 @Preview(showBackground = true)

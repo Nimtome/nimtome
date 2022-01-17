@@ -87,18 +87,18 @@ class SpellImporter {
 
         // maybe throw something if the XML is corrupt
 
-        return Spell(
-            name!!,
-            desc,
-            level ?: 0,
-            components ?: "",
-            range ?: "",
-            time ?: "",
-            school ?: "",
-            ritual ?: false,
-            duration ?: "",
-            classes ?: "Any",
-            roll
+        return Spell().copy(
+            name = name!!,
+            desc = desc,
+            level = level ?: 0,
+            components = components ?: "",
+            range = range ?: "",
+            time = time ?: "",
+            school = school ?: "",
+            ritual = ritual ?: false,
+            duration = duration ?: "",
+            classes = classes ?: "Any",
+            roll = roll
         )
     }
 

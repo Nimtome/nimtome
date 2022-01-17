@@ -63,7 +63,7 @@ fun addNewCharacter(character: DndCharacter) {
 class CreateCharacterActivity : ComponentActivity() {
 
     companion object {
-        const val KEY_CHARACTER_NAME = "KEY_CHARACTER_NAME"
+        const val KEY_CHARACTER_ID = "KEY_CHARACTER_ID"
     }
 
     private var characterLiveData: LiveData<DndCharacter>? = null
@@ -72,14 +72,15 @@ class CreateCharacterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         characterViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
-        val characterName = intent.getStringExtra(KEY_CHARACTER_NAME)
-        val isCreateMode = characterName.isNullOrBlank()
+        val characterId = intent.getIntExtra(KEY_CHARACTER_ID, -1)
+        val isCreateMode = characterId == -1
 
         setContent {
             NimtomeApp {
                 var dndCharacter: DndCharacter? by remember { mutableStateOf(null) }
-                characterLiveData = characterName?.let { characterViewModel.get(it) }
-                val originalCharacter = characterLiveData?.observeAsState()
+                if (!isCreateMode)
+                    characterLiveData = characterViewModel.get(characterId)
+                val originalCharacter = characterLiveData?.observeAsState(DndCharacter())
 
                 if (dndCharacter == null)
                     dndCharacter = if (!isCreateMode && originalCharacter != null) {

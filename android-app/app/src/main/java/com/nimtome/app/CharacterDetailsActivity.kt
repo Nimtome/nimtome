@@ -35,15 +35,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.nimtome.app.CharacterDetailsActivity.Companion.KEY_NAME
+import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.Spell
 import com.nimtome.app.ui.components.DndTopBar
 import com.nimtome.app.ui.components.NimtomeApp
 import com.nimtome.app.ui.components.SpellContent
 import com.nimtome.app.ui.theme.DndSpellsTheme
+import com.nimtome.app.viewmodel.CharacterSpellViewModel
 import com.nimtome.app.viewmodel.CharacterViewModel
-import com.nimtome.app.viewmodel.SpellViewModel
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -61,12 +61,25 @@ fun roll(rollText: String): String {
 
 class CharacterDetailsActivity : ComponentActivity() {
     companion object {
-        const val KEY_NAME = "KEY_NAME"
+        const val KEY_CHR_ID = "KEY_CHR_ID"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            DndSpellsTheme(
+                darkColors = colorPalette.darkColors,
+                lightColors = colorPalette.lightColors
+            ) {
+                // A surface container using the 'background' color from the theme
+                val viewModelProvider = ViewModelProvider(this)
+                val characterId = intent.getIntExtra(KEY_CHR_ID, 0)
+                val character by viewModelProvider[CharacterViewModel::class.java]
+                    .get(characterId).observeAsState(DndCharacter())
+
+                val spells by viewModelProvider[CharacterSpellViewModel::class.java]
+                    .getSpellsForCharacter(characterId).observeAsState(listOf())
+
             val viewModel = ViewModelProvider(this)
             val nameInDb = intent.getStringExtra(KEY_NAME) ?: ""
             val character by viewModel[CharacterViewModel::class.java].get(nameInDb).observeAsState()
@@ -79,7 +92,7 @@ class CharacterDetailsActivity : ComponentActivity() {
                 lightColors = preferredColorPalette.lightColors
             ) {
                 Surface(color = MaterialTheme.colors.background) {
-                    CharacterDetailContent(character ?: DndCharacter(), spells ?: listOf())
+                    CharacterDetailContent(character, spells)
                 }
             }
         }
@@ -103,7 +116,7 @@ fun CharacterDetailContent(
                 text = { Text("Select spells") },
                 onClick = {
                     val intent = Intent(activity, SelectSpellsActivity::class.java)
-                    intent.putExtra(KEY_NAME, character.name)
+                    intent.putExtra(SelectSpellsActivity.KEY_CHR_ID, character.id)
                     activity?.startActivity(intent)
                 },
                 icon = {
@@ -116,10 +129,9 @@ fun CharacterDetailContent(
         val youRolled = stringResource(R.string.you_rolled)
         CharacterSpellList(
             spells = spells,
-            character = character,
             onItemClick = { spell ->
                 val intent = Intent(activity, SpellDetailsActivity::class.java)
-                intent.putExtra(SpellDetailsActivity.KEY_SPELL_NAME, spell.name)
+                intent.putExtra(SpellDetailsActivity.KEY_SPELL_ID, spell.id)
                 activity?.startActivity(intent)
             },
             onRoll = { spell ->
@@ -168,13 +180,12 @@ fun SpellListItem(
 
 @Composable
 fun CharacterSpellList(
-    character: DndCharacter,
     spells: List<Spell>,
     onItemClick: (Spell) -> Unit = {},
     onRoll: (Spell) -> Unit = {},
 ) {
     LazyColumn {
-        items(spells.filter { character.spellList.contains(it.name) }) {
+        items(spells) {
             SpellListItem(it, onItemClick, onRoll)
         }
     }

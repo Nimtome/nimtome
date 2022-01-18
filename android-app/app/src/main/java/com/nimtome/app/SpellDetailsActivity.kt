@@ -16,6 +16,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -27,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.Spell
 import com.nimtome.app.ui.components.DndTopBar
+import com.nimtome.app.ui.components.NimtomeApp
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.SpellViewModel
 import kotlinx.coroutines.launch
@@ -34,6 +36,7 @@ import kotlinx.coroutines.launch
 class SpellDetailsActivity : ComponentActivity() {
     companion object {
         const val KEY_SPELL_NAME = "KEY_SPELL_NAME"
+        const val KEY_COLOR_OVERRIDE = "KEY_COLOR_OVERRIDE"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,17 +45,15 @@ class SpellDetailsActivity : ComponentActivity() {
         val spellName = intent.getStringExtra(KEY_SPELL_NAME) ?: ""
 
         setContent {
-            val spell = ViewModelProvider(this)[SpellViewModel::class.java]
+            val spell by ViewModelProvider(this)[SpellViewModel::class.java]
                 .get(spellName)
                 .observeAsState(Spell())
-                .value
 
-            DndSpellsTheme(darkColors = colorPalette.darkColors,
-                lightColors = colorPalette.lightColors) {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    SpellDetails(spell = spell)
-                }
+            NimtomeApp(
+                darkColors = colorPalette.darkColors,
+                lightColors = colorPalette.lightColors,
+            ) {
+                SpellDetails(spell = spell)
             }
         }
     }
@@ -141,7 +142,7 @@ fun SpellDescription(spell: Spell) {
 @Composable
 fun SpellDetailsPreview() {
     DndSpellsTheme {
-        SpellDetails(Spell())
+        SpellDetails(sampleSpells[0])
     }
 }
 
@@ -149,6 +150,6 @@ fun SpellDetailsPreview() {
 @Composable
 fun SpellDetailsDarkPreview() {
     DndSpellsTheme(darkTheme = true) {
-        SpellDetails(Spell())
+        SpellDetails(sampleSpells[0])
     }
 }

@@ -4,7 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,12 +41,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
-import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
 import com.nimtome.app.ui.components.ClassSelector
+import com.nimtome.app.ui.components.ColorPaletteSelector
 import com.nimtome.app.ui.components.DndTopBar
 import com.nimtome.app.ui.components.LevelSelector
+import com.nimtome.app.ui.components.NimtomeApp
 import com.nimtome.app.ui.logic.MAX_CHARACTER_LEVEL
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
@@ -73,7 +76,7 @@ class CreateCharacterActivity : ComponentActivity() {
         val isCreateMode = characterName.isNullOrBlank()
 
         setContent {
-            MyApp {
+            NimtomeApp {
                 var dndCharacter: DndCharacter? by remember { mutableStateOf(null) }
                 characterLiveData = characterName?.let { characterViewModel.get(it) }
                 val originalCharacter = characterLiveData?.observeAsState()
@@ -279,15 +282,15 @@ fun CharacterDetailList(
                 onChangeDndCharacter(dndCharacter.copy(level = it))
             },
         )
-    }
-}
-
-@Composable
-fun MyApp(component: @Composable () -> Unit) {
-    DndSpellsTheme(darkColors = colorPalette.darkColors, lightColors = colorPalette.lightColors) {
-        // A surface container using the 'background' color from the theme
-        Surface(color = MaterialTheme.colors.background) {
-            component()
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            ColorPaletteSelector(
+                modifier = modifier,
+                selected = dndCharacter.preferredColorPalette,
+                onChanged = {onChangeDndCharacter(dndCharacter.copy(preferredColorPalette = it))}
+            )
         }
     }
 }

@@ -37,10 +37,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.CharacterDetailsActivity.Companion.KEY_NAME
+import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
 import com.nimtome.app.model.Spell
 import com.nimtome.app.ui.components.DndTopBar
+import com.nimtome.app.ui.components.NimtomeApp
 import com.nimtome.app.ui.components.SpellContent
 import com.nimtome.app.ui.components.SpellFilterComponent
 import com.nimtome.app.ui.logic.SpellFilter
@@ -53,18 +55,21 @@ class SelectSpellsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val vmp = ViewModelProvider(this)
-            val spells =
-                vmp[SpellViewModel::class.java].allSpells.observeAsState().value ?: listOf()
+            val spells by vmp[SpellViewModel::class.java].allSpells.observeAsState(listOf())
             val characterName = intent.getStringExtra(KEY_NAME) ?: ""
-            val character =
-                vmp[CharacterViewModel::class.java].get(characterName).observeAsState().value
-                    ?: DndCharacter()
-            MyApp {
+            val character by vmp[CharacterViewModel::class.java].get(characterName).observeAsState()
+
+            val preferredColorPalette = character?.preferredColorPalette ?: colorPalette
+            NimtomeApp(
+                darkColors = preferredColorPalette.darkColors,
+                lightColors = preferredColorPalette.lightColors,
+            ) {
                 SelectSpellsContent(
                     spells = spells,
-                    character = character,
+                    character = character ?: DndCharacter(),
                     updateCharacter = { vmp[CharacterViewModel::class.java].update(it) }
                 )
             }

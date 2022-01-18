@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -35,10 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.CharacterDetailsActivity.Companion.KEY_NAME
-import com.nimtome.app.DndApplication.Companion.colorPalette
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.Spell
 import com.nimtome.app.ui.components.DndTopBar
+import com.nimtome.app.ui.components.NimtomeApp
 import com.nimtome.app.ui.components.SpellContent
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
@@ -66,19 +67,19 @@ class CharacterDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DndSpellsTheme(darkColors = colorPalette.darkColors,
-                lightColors = colorPalette.lightColors) {
-                // A surface container using the 'background' color from the theme
-                val viewModel = ViewModelProvider(this)
-                val nameInDb = intent.getStringExtra(KEY_NAME) ?: ""
-                val character =
-                    viewModel[CharacterViewModel::class.java].get(nameInDb).observeAsState().value
-                        ?: DndCharacter()
-                val spells =
-                    viewModel[SpellViewModel::class.java].allSpells.observeAsState().value
-                        ?: listOf()
+            val viewModel = ViewModelProvider(this)
+            val nameInDb = intent.getStringExtra(KEY_NAME) ?: ""
+            val character by viewModel[CharacterViewModel::class.java].get(nameInDb).observeAsState()
+            val preferredColorPalette = character?.preferredColorPalette ?: DndApplication.colorPalette
+
+            val spells by viewModel[SpellViewModel::class.java].allSpells.observeAsState()
+
+            NimtomeApp(
+                darkColors = preferredColorPalette.darkColors,
+                lightColors = preferredColorPalette.lightColors
+            ) {
                 Surface(color = MaterialTheme.colors.background) {
-                    CharacterDetailContent(character, spells)
+                    CharacterDetailContent(character ?: DndCharacter(), spells ?: listOf())
                 }
             }
         }

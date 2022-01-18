@@ -34,7 +34,6 @@ fun NimtomeApp(
                 color = bgColor,
             )
         }
-        // A surface container using the 'background' color from the theme
         Surface(color = MaterialTheme.colors.background) {
             component()
         }

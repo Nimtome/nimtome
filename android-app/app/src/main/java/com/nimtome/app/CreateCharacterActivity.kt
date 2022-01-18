@@ -38,9 +38,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
-
-
-
 class CreateCharacterActivity : ComponentActivity() {
 
     private lateinit var characterViewModel: CharacterViewModel

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "dcf55127977b7898a4517b9ae5025593",
+    "identityHash": "ab82e0ed5f7a9d26261bd93c38073f34",
     "entities": [
       {
         "tableName": "characters",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `level` INTEGER NOT NULL, `dndClass` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `level` INTEGER NOT NULL, `dndClass` TEXT NOT NULL, `colorPalette` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "characterId",
@@ -29,6 +29,12 @@
           {
             "fieldPath": "dndClass",
             "columnName": "dndClass",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "preferredColorPaletteName",
+            "columnName": "colorPalette",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -169,7 +175,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dcf55127977b7898a4517b9ae5025593')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ab82e0ed5f7a9d26261bd93c38073f34')"
     ]
   }
 }

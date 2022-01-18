@@ -292,7 +292,11 @@ private fun MainActivityContent(
 
                 Spacer(modifier = Modifier.padding(bottom = 5.dp))
 
-                ColorPaletteSelector(modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO), selected = colors, onChanged = onColorsChange)
+                ColorPaletteSelector(
+                    modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO),
+                    selected = colors,
+                    onChanged = onColorsChange
+                )
 
                 Spacer(modifier = Modifier.padding(bottom = 15.dp))
             }

@@ -8,7 +8,6 @@ import com.nimtome.app.DndApplication
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.repository.CharacterRepository
 import com.nimtome.app.repository.CharacterSpellRepository
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class CharacterViewModel : ViewModel() {
@@ -23,7 +22,10 @@ class CharacterViewModel : ViewModel() {
     }
 
     fun delete(character: DndCharacter) = viewModelScope.launch {
-        CharacterSpellRepository(DndApplication.nimtomeDatabase.nimtomeDao()).submitSpellList(character, listOf())
+        CharacterSpellRepository(DndApplication.nimtomeDatabase.nimtomeDao()).submitSpellList(
+            character,
+            listOf()
+        )
         repo.delete(character)
     }
 

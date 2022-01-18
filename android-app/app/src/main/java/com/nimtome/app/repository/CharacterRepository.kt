@@ -30,9 +30,9 @@ class CharacterRepository(private val nimtomeDao: NimtomeDao) {
         roomCharacter?.let { nimtomeDao.deleteCharacter(roomCharacter) }
     }
 
-    fun get(id: Int): LiveData<DndCharacter?> {
+    fun get(id: Int): LiveData<DndCharacter> {
         return nimtomeDao.getCharacterLiveData(id).map {
-            it?.let { it.toDomainModel() }
+            it.toDomainModel()
         }
     }
 

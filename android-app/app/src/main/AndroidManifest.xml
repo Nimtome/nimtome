@@ -14,6 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DndSpells">
         <activity
+            android:name=".ModifyCharacterActivity"
+            android:exported="false"
+            android:label="@string/title_activity_modify_character"
+            android:theme="@style/Theme.DndSpells.NoActionBar" />
+        <activity
             android:name=".CharacterListActivity"
             android:exported="true"
             android:label="@string/title_activity_character_list"

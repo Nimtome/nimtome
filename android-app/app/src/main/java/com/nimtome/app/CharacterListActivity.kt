@@ -135,8 +135,8 @@ class CharacterListActivity : ComponentActivity() {
                             )
                         },
                         modifyCharacter = {
-                            val intent = Intent(this, CreateCharacterActivity::class.java)
-                            intent.putExtra(CreateCharacterActivity.KEY_CHARACTER_ID, it.id)
+                            val intent = Intent(this, ModifyCharacterActivity::class.java)
+                            intent.putExtra(ModifyCharacterActivity.KEY_CHARACTER_ID, it.id)
                             startActivity(intent)
                         },
                         openCharacterDetails = {

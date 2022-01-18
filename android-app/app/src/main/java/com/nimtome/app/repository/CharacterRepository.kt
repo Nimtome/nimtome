@@ -6,7 +6,6 @@ import com.nimtome.app.database.NimtomeDao
 import com.nimtome.app.database.RoomCharacter
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
-import com.nimtome.app.model.Spell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -29,9 +28,9 @@ class CharacterRepository(private val nimtomeDao: NimtomeDao) {
         roomCharacter?.let { nimtomeDao.deleteCharacter(roomCharacter) }
     }
 
-    fun get(id: Int): LiveData<DndCharacter?> {
+    fun get(id: Int): LiveData<DndCharacter> {
         return nimtomeDao.getCharacterLiveData(id).map {
-            it?.let { it.toDomainModel() }
+            it.toDomainModel()
         }
     }
 

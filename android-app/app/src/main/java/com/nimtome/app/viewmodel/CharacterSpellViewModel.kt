@@ -14,8 +14,8 @@ class CharacterSpellViewModel : ViewModel() {
         DndApplication.nimtomeDatabase.nimtomeDao()
     )
 
-    fun getSpellsForCharacter(id: Int): LiveData<List<Spell>> {
-        return repo.getLiveCharacterSpellList(id)
+    fun getSpellsForCharacter(characterId: Int): LiveData<List<Spell>> {
+        return repo.getLiveCharacterSpellList(characterId)
     }
 
     fun submitSpellist(character: DndCharacter, spells: List<Spell>) {

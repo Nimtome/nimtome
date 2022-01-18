@@ -59,16 +59,15 @@ class SelectSpellsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val vmp = ViewModelProvider(this)
-            val spells =
-                vmp[SpellViewModel::class.java].allSpells.observeAsState().value ?: listOf()
-            val characterId = intent.getIntExtra(KEY_CHR_ID,0)
-            val character by
-                vmp[CharacterViewModel::class.java].get(characterId).observeAsState(DndCharacter())
+            val spells by vmp[SpellViewModel::class.java].allSpells.observeAsState(listOf())
+            val characterId = intent.getIntExtra(KEY_CHR_ID, 0)
+            val character by vmp[CharacterViewModel::class.java].get(characterId).observeAsState(DndCharacter())
+            val characterSpells by vmp[CharacterSpellViewModel::class.java].getSpellsForCharacter(characterId).observeAsState(listOf())
             MyApp {
                 SelectSpellsContent(
                     spells = spells,
                     character = character,
-                    updateCharacter = { vmp[CharacterViewModel::class.java].update(it) },
+                    characterSpells = characterSpells,
                     updateSpells =  { vmp[CharacterSpellViewModel::class.java].submitSpellist(character, it) }
                 )
             }
@@ -81,12 +80,11 @@ class SelectSpellsActivity : ComponentActivity() {
 fun SelectSpellsContent(
     spells: List<Spell>,
     character: DndCharacter,
-    updateCharacter: (DndCharacter) -> Unit = {},
+    characterSpells: List<Spell>,
     updateSpells: (List<Spell>) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
-
     var spellFilter by remember { mutableStateOf(SpellFilter(classFilter = character.dndClass)) }
 
     BottomSheetScaffold(
@@ -132,9 +130,9 @@ fun SelectSpellsContent(
                 itemContent = { spell ->
                     SpellCardWithCheckBox(
                         spell = spell,
-                        checked = spells.contains(spell),
+                        checked = characterSpells.contains(spell),
                         onCheck = { newContains ->
-                            val mutableSpells = spells.toMutableList()
+                            val mutableSpells = characterSpells.toMutableList()
                             if (newContains) {
                                 mutableSpells.add(spell)
                             } else {
@@ -202,7 +200,7 @@ val sampleCharacter = DndCharacter(
 fun SpellSelectPreview() {
 
     DndSpellsTheme {
-        SelectSpellsContent(spells = sampleSpells, character = sampleCharacter)
+        SelectSpellsContent(spells = sampleSpells, character = sampleCharacter, characterSpells = listOf())
     }
 }
 
@@ -211,6 +209,6 @@ fun SpellSelectPreview() {
 fun SpellSelectDarkPreview() {
 
     DndSpellsTheme(darkTheme = true) {
-        SelectSpellsContent(spells = sampleSpells, character = sampleCharacter)
+        SelectSpellsContent(spells = sampleSpells, character = sampleCharacter, characterSpells = listOf())
     }
 }

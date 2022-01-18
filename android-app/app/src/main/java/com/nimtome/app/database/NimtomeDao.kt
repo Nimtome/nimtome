@@ -19,8 +19,8 @@ interface NimtomeDao {
     @Query("SELECT * FROM characters WHERE characterId == :id")
     fun getCharacter(id: Int): RoomCharacter?
 
-    @Query("SELECT * FROM characters WHERE name == :name")
-    fun getCharacterLiveData(name: Int): LiveData<RoomCharacter?>
+    @Query("SELECT * FROM characters WHERE characterId == :id")
+    fun getCharacterLiveData(id: Int): LiveData<RoomCharacter>
 
     @Update
     fun updateCharacter(vararg roomCharacters: RoomCharacter): Int

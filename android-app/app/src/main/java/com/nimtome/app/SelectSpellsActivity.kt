@@ -52,7 +52,7 @@ import kotlinx.coroutines.launch
 
 class SelectSpellsActivity : ComponentActivity() {
 
-    companion object{
+    companion object {
         const val KEY_CHR_ID = "KEY_CHR_ID"
     }
 
@@ -62,9 +62,13 @@ class SelectSpellsActivity : ComponentActivity() {
             val vmp = ViewModelProvider(this)
             val spells by vmp[SpellViewModel::class.java].allSpells.observeAsState(listOf())
             val characterId = intent.getIntExtra(KEY_CHR_ID, 0)
-            val character by vmp[CharacterViewModel::class.java].get(characterId).observeAsState(DndCharacter())
-            val characterSpells by vmp[CharacterSpellViewModel::class.java].getSpellsForCharacter(characterId).observeAsState(listOf())
-            
+            val character by vmp[CharacterViewModel::class.java].get(characterId)
+                .observeAsState(DndCharacter())
+            val characterSpells by vmp[CharacterSpellViewModel::class.java].getSpellsForCharacter(
+                characterId
+            ).observeAsState(listOf())
+            val preferredColorPalette = character.preferredColorPalette
+
             NimtomeApp(
                 darkColors = preferredColorPalette.darkColors,
                 lightColors = preferredColorPalette.lightColors,
@@ -73,7 +77,12 @@ class SelectSpellsActivity : ComponentActivity() {
                     spells = spells,
                     character = character,
                     characterSpells = characterSpells,
-                    updateSpells =  { vmp[CharacterSpellViewModel::class.java].submitSpellist(character, it) }
+                    updateSpells = {
+                        vmp[CharacterSpellViewModel::class.java].submitSpellist(
+                            character,
+                            it
+                        )
+                    }
                 )
             }
         }
@@ -205,7 +214,11 @@ val sampleCharacter = DndCharacter(
 fun SpellSelectPreview() {
 
     DndSpellsTheme {
-        SelectSpellsContent(spells = sampleSpells, character = sampleCharacter, characterSpells = listOf())
+        SelectSpellsContent(
+            spells = sampleSpells,
+            character = sampleCharacter,
+            characterSpells = listOf()
+        )
     }
 }
 
@@ -214,6 +227,10 @@ fun SpellSelectPreview() {
 fun SpellSelectDarkPreview() {
 
     DndSpellsTheme(darkTheme = true) {
-        SelectSpellsContent(spells = sampleSpells, character = sampleCharacter, characterSpells = listOf())
+        SelectSpellsContent(
+            spells = sampleSpells,
+            character = sampleCharacter,
+            characterSpells = listOf()
+        )
     }
 }

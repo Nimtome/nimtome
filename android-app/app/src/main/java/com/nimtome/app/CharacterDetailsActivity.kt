@@ -67,25 +67,16 @@ class CharacterDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DndSpellsTheme(
-                darkColors = colorPalette.darkColors,
-                lightColors = colorPalette.lightColors
-            ) {
-                // A surface container using the 'background' color from the theme
-                val viewModelProvider = ViewModelProvider(this)
-                val characterId = intent.getIntExtra(KEY_CHR_ID, 0)
-                val character by viewModelProvider[CharacterViewModel::class.java]
-                    .get(characterId).observeAsState(DndCharacter())
 
-                val spells by viewModelProvider[CharacterSpellViewModel::class.java]
-                    .getSpellsForCharacter(characterId).observeAsState(listOf())
+            val viewModelProvider = ViewModelProvider(this)
+            val characterId = intent.getIntExtra(KEY_CHR_ID, 0)
+            val character by viewModelProvider[CharacterViewModel::class.java]
+                .get(characterId).observeAsState(DndCharacter())
 
-            val viewModel = ViewModelProvider(this)
-            val nameInDb = intent.getStringExtra(KEY_NAME) ?: ""
-            val character by viewModel[CharacterViewModel::class.java].get(nameInDb).observeAsState()
-            val preferredColorPalette = character?.preferredColorPalette ?: DndApplication.colorPalette
+            val spells by viewModelProvider[CharacterSpellViewModel::class.java]
+                .getSpellsForCharacter(characterId).observeAsState(listOf())
 
-            val spells by viewModel[SpellViewModel::class.java].allSpells.observeAsState()
+            val preferredColorPalette = character.preferredColorPalette
 
             NimtomeApp(
                 darkColors = preferredColorPalette.darkColors,

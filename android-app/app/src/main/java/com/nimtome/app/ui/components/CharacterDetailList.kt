@@ -1,6 +1,9 @@
 package com.nimtome.app.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
@@ -54,5 +57,18 @@ fun CharacterDetailList(
                 onChangeDndCharacter(dndCharacter.copy(level = it))
             },
         )
+
+        Spacer(Modifier.padding(bottom = 10.dp))
+
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            ColorPaletteSelector(
+                modifier = modifier.fillMaxWidth(.85f),
+                selected = dndCharacter.preferredColorPalette,
+                onChanged = { onChangeDndCharacter(dndCharacter.copy(preferredColorPalette = it)) }
+            )
+        }
     }
 }

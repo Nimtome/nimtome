@@ -1,12 +1,9 @@
 package com.nimtome.app
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExtendedFloatingActionButton
@@ -31,22 +28,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.model.DndCharacter
-import com.nimtome.app.model.DndClass
-import com.nimtome.app.ui.components.ClassSelector
-import com.nimtome.app.ui.components.ColorPaletteSelector
 import com.nimtome.app.ui.components.CharacterDetailList
 import com.nimtome.app.ui.components.DndTopBar
-import com.nimtome.app.ui.logic.validateCharacter
-import com.nimtome.app.ui.components.LevelSelector
 import com.nimtome.app.ui.components.NimtomeApp
-import com.nimtome.app.ui.logic.MAX_CHARACTER_LEVEL
+import com.nimtome.app.ui.logic.validateCharacter
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-
-
-
 
 
 class CreateCharacterActivity : ComponentActivity() {
@@ -60,9 +49,10 @@ class CreateCharacterActivity : ComponentActivity() {
         characterViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
 
         setContent {
-            NimtomeApp {
-                var dndCharacter by remember { mutableStateOf(DndCharacter()) }
-
+            var dndCharacter by remember { mutableStateOf(DndCharacter()) }
+            NimtomeApp(
+                colorPalette = dndCharacter.preferredColorPalette
+            ) {
                 CreateCharacterScreenContent(
                     character = dndCharacter,
                     onChangeDndCharacter = { dndCharacter = it }
@@ -135,16 +125,6 @@ private fun CreateCharacterFloatingActionButton(
         },
         icon = { Icon(Icons.Outlined.Add, contentDescription = null) }
     )
-}
-
-@Composable
-fun MyApp(component: @Composable () -> Unit) {
-    DndSpellsTheme(darkColors = colorPalette.darkColors, lightColors = colorPalette.lightColors) {
-        // A surface container using the 'background' color from the theme
-        Surface(color = MaterialTheme.colors.background) {
-            component()
-        }
-    }
 }
 
 @ExperimentalMaterialApi

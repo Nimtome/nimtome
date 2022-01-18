@@ -7,7 +7,6 @@ import com.nimtome.app.database.RoomCharacter
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
 import com.nimtome.app.ui.theme.ColorPalette
-import com.nimtome.app.model.Spell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -46,8 +45,7 @@ fun DndCharacter.toRoomDomain(): RoomCharacter {
         name = name,
         level = level,
         dndClass = dndClass.name,
-        characterId = id
-        id = id,
+        characterId = id,
         preferredColorPaletteName = preferredColorPalette.name
     )
 }

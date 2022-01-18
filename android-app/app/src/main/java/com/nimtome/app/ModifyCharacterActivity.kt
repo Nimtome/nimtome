@@ -33,6 +33,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.ui.components.CharacterDetailList
 import com.nimtome.app.ui.components.DndTopBar
+import com.nimtome.app.ui.components.NimtomeApp
 import com.nimtome.app.ui.logic.validateCharacter
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
@@ -58,8 +59,10 @@ class ModifyCharacterActivity : ComponentActivity() {
         characterViewmodel = ViewModelProvider(this)[CharacterViewModel::class.java]
 
         setContent {
-            MyApp {
-                var dndCharacter: DndCharacter? by remember { mutableStateOf(null) }
+            var dndCharacter: DndCharacter? by remember { mutableStateOf(null) }
+            NimtomeApp(
+                colorPalette = dndCharacter?.preferredColorPalette ?: DndApplication.colorPalette,
+            ) {
                 val originalCharacter by characterViewmodel.get(characterId).observeAsState()
 
                 if (dndCharacter == null) {

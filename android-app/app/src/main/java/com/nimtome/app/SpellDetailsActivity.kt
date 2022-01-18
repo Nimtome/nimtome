@@ -46,7 +46,7 @@ class SpellDetailsActivity : ComponentActivity() {
 
         setContent {
             val spell by ViewModelProvider(this)[SpellViewModel::class.java]
-                .get(spellName)
+                .get(spellId)
                 .observeAsState(Spell())
 
             NimtomeApp(

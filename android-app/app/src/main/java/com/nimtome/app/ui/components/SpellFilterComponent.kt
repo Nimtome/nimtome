@@ -1,24 +1,19 @@
 package com.nimtome.app.ui.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Slider
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.util.toRange
 import com.nimtome.app.R
 import com.nimtome.app.ui.logic.MAX_SPELL_LEVEL
 import com.nimtome.app.ui.logic.SpellFilter
+import kotlin.math.roundToInt
 
+@ExperimentalMaterialApi
 @Composable
 fun SpellFilterComponent(
     spellFilter: SpellFilter,
@@ -57,12 +52,20 @@ fun SpellFilterComponent(
                 Text(stringResource(R.string.filter_spell_level))
             }
 
-            Text("Level " + spellFilter.levelFilter.toInt())
+            Text("Level ${spellFilter.levelFilter.toRange().lower.roundToInt()} - ${spellFilter.levelFilter.toRange().upper.roundToInt()}")
         }
-        Slider(
-            value = spellFilter.levelFilter / MAX_SPELL_LEVEL,
-            onValueChange = { onSpellFilterChanged(spellFilter.copy(levelFilter = it * MAX_SPELL_LEVEL)) },
-            enabled = spellFilter.levelFilterEnabled
+//        Slider(
+//            value = spellFilter.levelFilterLower / MAX_SPELL_LEVEL,
+//            onValueChange = { onSpellFilterChanged(spellFilter.copy(levelFilterLower = it * MAX_SPELL_LEVEL)) },
+//            enabled = spellFilter.levelFilterEnabled
+//        )
+//
+        RangeSlider(
+            values = spellFilter.levelFilter,
+            steps = 9,
+            onValueChange = { onSpellFilterChanged(spellFilter.copy(levelFilter = it)) },
+            enabled = spellFilter.levelFilterEnabled,
+            valueRange = 0f..MAX_SPELL_LEVEL.toFloat()
         )
 
         Divider(

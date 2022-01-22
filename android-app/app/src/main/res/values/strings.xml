@@ -18,13 +18,12 @@
     <string name="title_activity_character_details">CharacterDetailsActivity</string>
     <string name="title_activity_select_spells">SelectSpellsActivity</string>
     <string name="select_spells">- select spells</string>
-    <string name="title_activity_ruinable">RuinableActivity</string>
     <string name="modify_character">Modify Character</string>
     <string name="filter_components">Filter Components</string>
     <string name="filter_spell_level">Filter Spell Level</string>
     <string name="spell_name">Spell Name</string>
     <string name="you_rolled">You rolled:</string>
-    <string name="title_activity_character_list">CharacterListActivity</string>
+    <string name="title_activity_character_list">Nimtome</string>
     <string name="storage_access_rationale">We need to use storage to access the spell list XML file. If you cancel this, you have to go into setting and enable storage access.</string>
     <string name="title_activity_modify_character">ModifyCharacterActivity</string>
 </resources>

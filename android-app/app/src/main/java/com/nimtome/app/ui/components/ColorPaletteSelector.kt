@@ -29,16 +29,7 @@ fun ColorPaletteSelector(
         backgroundColor = Color.Transparent,
         elevation = 0.dp
     ) {
-        Column (modifier = Modifier
-            .fillMaxWidth(CARD_INNER_FILL_RATIO)
-            .padding(2.dp)) {
-            Text(
-                text = "Preferred color palette",
-            )
-
-            Spacer(modifier = Modifier.padding(5.dp))
-
-
+        Column (modifier = Modifier.padding(2.dp)) {
             LazyRow(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier

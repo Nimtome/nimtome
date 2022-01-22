@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
@@ -26,12 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.ui.components.CharacterDetailList
 import com.nimtome.app.ui.components.DndTopBar
 import com.nimtome.app.ui.components.NimtomeApp
 import com.nimtome.app.ui.logic.validateCharacter
+import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
 import com.nimtome.app.ui.theme.DndSpellsTheme
 import com.nimtome.app.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -86,6 +90,7 @@ private fun CreateCharacterScreenContent(
         content = {
             Column {
                 CharacterDetailList(
+                    modifier = Modifier.padding(10.dp),
                     dndCharacter = character,
                     onChangeDndCharacter = { onChangeDndCharacter(it.copy()) },
                 )
@@ -133,7 +138,7 @@ private fun CreateCharacterFloatingActionButton(
 fun CreateCharacterPreview() {
     DndSpellsTheme {
         Surface {
-            CreateCharacterScreenContent()
+            CreateCharacterScreenContent(character = sampleCharacter, onChangeDndCharacter = { })
         }
     }
 }
@@ -144,7 +149,7 @@ fun CreateCharacterPreview() {
 fun CreateCharacterDarkPreview() {
     DndSpellsTheme(darkTheme = true) {
         Surface(color = MaterialTheme.colors.background) {
-            CreateCharacterScreenContent()
+            CreateCharacterScreenContent(character = sampleCharacter, onChangeDndCharacter = { })
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.ui.components.CharacterDetailList
@@ -109,6 +111,7 @@ private fun ModifyCharacterScreenContent(
         content = {
             Column {
                 CharacterDetailList(
+                    modifier = Modifier.padding(10.dp),
                     dndCharacter = character,
                     onChangeDndCharacter = {
                         onChangeDndCharacter(it.copy())
@@ -158,7 +161,10 @@ fun ModifyCharacterFloatingActionButton(
 private fun ModifyCharacterPreview() {
     DndSpellsTheme {
         Surface {
-            ModifyCharacterPreview()
+            ModifyCharacterScreenContent(
+                character = sampleCharacter,
+                onChangeDndCharacter = {}
+            )
         }
     }
 }
@@ -169,7 +175,10 @@ private fun ModifyCharacterPreview() {
 private fun ModifyCharacterDarkPreview() {
     DndSpellsTheme(darkTheme = true) {
         Surface(color = MaterialTheme.colors.background) {
-            ModifyCharacterPreview()
+            ModifyCharacterScreenContent(
+                character = sampleCharacter,
+                onChangeDndCharacter = {}
+            )
         }
     }
 }

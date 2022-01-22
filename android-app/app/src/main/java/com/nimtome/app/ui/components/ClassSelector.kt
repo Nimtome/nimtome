@@ -52,6 +52,7 @@ fun ClassSelector(
             onDismissRequest = {
                 expandedState = false
             },
+            modifier = Modifier.fillMaxWidth()
         ) {
 
             allClasses.forEach {

@@ -12,17 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.Card
-import androidx.compose.material.Checkbox
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -62,28 +54,28 @@ class SelectSpellsActivity : ComponentActivity() {
             val vmp = ViewModelProvider(this)
             val spells by vmp[SpellViewModel::class.java].allSpells.observeAsState(listOf())
             val characterId = intent.getIntExtra(KEY_CHR_ID, 0)
-            val character by vmp[CharacterViewModel::class.java].get(characterId)
-                .observeAsState(DndCharacter())
+            vmp[CharacterViewModel::class.java].setActiveCharacterById(characterId)
+            val character by vmp[CharacterViewModel::class.java].activeCharacter.observeAsState()
             val characterSpells by vmp[CharacterSpellViewModel::class.java].getSpellsForCharacter(
                 characterId
             ).observeAsState(listOf())
-            val preferredColorPalette = character.preferredColorPalette
+            val preferredColorPalette = character?.preferredColorPalette ?: DndApplication.colorPalette
 
             NimtomeApp(
                 darkColors = preferredColorPalette.darkColors,
                 lightColors = preferredColorPalette.lightColors,
             ) {
-                SelectSpellsContent(
-                    spells = spells,
-                    character = character,
-                    characterSpells = characterSpells,
-                    updateSpells = {
-                        vmp[CharacterSpellViewModel::class.java].submitSpellist(
-                            character,
-                            it
-                        )
-                    }
-                )
+                if (character != null)
+                    SelectSpellsContent(
+                        spells = spells,
+                        character = character!!,
+                        characterSpells = characterSpells,
+                        updateSpells = {
+                            vmp[CharacterSpellViewModel::class.java].submitSpellist(character!!, it)
+                        }
+                    )
+                else
+                    CircularProgressIndicator()
             }
         }
     }

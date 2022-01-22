@@ -1,11 +1,11 @@
 package com.nimtome.app.ui.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,21 +29,26 @@ fun ColorPaletteSelector(
         backgroundColor = Color.Transparent,
         elevation = 0.dp
     ) {
-        LazyRow(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO)
-        ) {
-            this.items(
-                items = ColorPalette.values(),
-                itemContent = { colorPalette ->
-                    ColorSelectorRadio(
-                        selected = colorPalette == selected,
-                        onClick = { onChanged(colorPalette) },
-                        colors = colorPalette.lightColors,
-                    )
-                }
-            )
+        Column (modifier = Modifier.padding(2.dp)) {
+            LazyRow(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(2.dp)
+            ) {
+                this.items(
+                    items = ColorPalette.values(),
+                    itemContent = { colorPalette ->
+                        ColorSelectorRadio(
+                            selected = colorPalette == selected,
+                            onClick = { onChanged(colorPalette) },
+                            colors = colorPalette.lightColors,
+                        )
+                    }
+                )
+            }
         }
+
     }
 }
 

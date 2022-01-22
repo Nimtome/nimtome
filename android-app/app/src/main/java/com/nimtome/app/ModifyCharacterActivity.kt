@@ -5,19 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -29,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.ui.components.CharacterDetailList
@@ -59,18 +52,21 @@ class ModifyCharacterActivity : ComponentActivity() {
         characterViewmodel = ViewModelProvider(this)[CharacterViewModel::class.java]
 
         setContent {
-            var dndCharacter: DndCharacter? by remember { mutableStateOf(null) }
-            NimtomeApp(
-                colorPalette = dndCharacter?.preferredColorPalette ?: DndApplication.colorPalette,
-            ) {
-                val originalCharacter by characterViewmodel.get(characterId).observeAsState()
 
-                if (dndCharacter == null) {
-                    originalCharacter?.let { dndCharacter = it }
+            characterViewmodel.setActiveCharacterById(characterId)
+            var editedDndCharacter: DndCharacter? by remember { mutableStateOf(null)}
+            NimtomeApp(
+                colorPalette = editedDndCharacter?.preferredColorPalette ?: DndApplication.colorPalette,
+            ) {
+                val originalCharacter = characterViewmodel.activeCharacter.observeAsState()
+
+                if (editedDndCharacter == null) {
+                    editedDndCharacter = originalCharacter.value
+                    CircularProgressIndicator()
                 } else {
                     ModifyCharacterScreenContent(
-                        character = dndCharacter!!,
-                        onChangeDndCharacter = { dndCharacter = it }
+                        character = editedDndCharacter!!,
+                        onChangeDndCharacter = { editedDndCharacter = it }
                     )
                 }
             }
@@ -115,6 +111,7 @@ private fun ModifyCharacterScreenContent(
         content = {
             Column {
                 CharacterDetailList(
+                    modifier = Modifier.padding(10.dp),
                     dndCharacter = character,
                     onChangeDndCharacter = {
                         onChangeDndCharacter(it.copy())
@@ -164,7 +161,10 @@ fun ModifyCharacterFloatingActionButton(
 private fun ModifyCharacterPreview() {
     DndSpellsTheme {
         Surface {
-            ModifyCharacterPreview()
+            ModifyCharacterScreenContent(
+                character = sampleCharacter,
+                onChangeDndCharacter = {}
+            )
         }
     }
 }
@@ -175,7 +175,10 @@ private fun ModifyCharacterPreview() {
 private fun ModifyCharacterDarkPreview() {
     DndSpellsTheme(darkTheme = true) {
         Surface(color = MaterialTheme.colors.background) {
-            ModifyCharacterPreview()
+            ModifyCharacterScreenContent(
+                character = sampleCharacter,
+                onChangeDndCharacter = {}
+            )
         }
     }
 }

@@ -12,18 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -69,20 +60,22 @@ class CharacterDetailsActivity : ComponentActivity() {
 
             val viewModelProvider = ViewModelProvider(this)
             val characterId = intent.getIntExtra(KEY_CHR_ID, 0)
-            val character by viewModelProvider[CharacterViewModel::class.java]
-                .get(characterId).observeAsState(DndCharacter())
-
+            viewModelProvider[CharacterViewModel::class.java].setActiveCharacterById(characterId)
+            val character by viewModelProvider[CharacterViewModel::class.java].activeCharacter.observeAsState()
             val spells by viewModelProvider[CharacterSpellViewModel::class.java]
                 .getSpellsForCharacter(characterId).observeAsState(listOf())
 
-            val preferredColorPalette = character.preferredColorPalette
+            val preferredColorPalette = character?.preferredColorPalette ?: DndApplication.colorPalette
 
             NimtomeApp(
                 darkColors = preferredColorPalette.darkColors,
                 lightColors = preferredColorPalette.lightColors
             ) {
                 Surface(color = MaterialTheme.colors.background) {
-                    CharacterDetailContent(character, spells)
+                    if (character != null)
+                        CharacterDetailContent(character!!, spells)
+                    else
+                        CircularProgressIndicator()
                 }
             }
         }

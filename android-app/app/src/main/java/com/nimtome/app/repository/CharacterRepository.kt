@@ -29,10 +29,14 @@ class CharacterRepository(private val nimtomeDao: NimtomeDao) {
         roomCharacter?.let { nimtomeDao.deleteCharacter(roomCharacter) }
     }
 
-    fun get(id: Int): LiveData<DndCharacter> {
+    fun getLive(id: Int): LiveData<DndCharacter> {
         return nimtomeDao.getCharacterLiveData(id).map {
             it.toDomainModel()
         }
+    }
+
+    fun getById(id: Int): DndCharacter? {
+        return nimtomeDao.getCharacter(id)?.toDomainModel()
     }
 
     suspend fun update(character: DndCharacter) = withContext(Dispatchers.IO) {

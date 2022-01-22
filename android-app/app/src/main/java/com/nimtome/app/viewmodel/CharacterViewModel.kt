@@ -1,16 +1,20 @@
 package com.nimtome.app.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
 import com.nimtome.app.DndApplication
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.repository.CharacterRepository
 import com.nimtome.app.repository.CharacterSpellRepository
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 
 class CharacterViewModel : ViewModel() {
+
+    private val _activeCharacter: MutableLiveData<DndCharacter?> = MutableLiveData(null)
+
+    val activeCharacter: LiveData<DndCharacter?> get() = _activeCharacter
+
     private val repo = CharacterRepository(
         nimtomeDao = DndApplication.nimtomeDatabase.nimtomeDao()
     )
@@ -29,12 +33,13 @@ class CharacterViewModel : ViewModel() {
         repo.delete(character)
     }
 
-    fun get(id: Int): LiveData<DndCharacter> {
-        var characterLiveData: LiveData<DndCharacter> = MediatorLiveData()
-        viewModelScope.launch {
-            characterLiveData = repo.get(id)
+    @OptIn(DelicateCoroutinesApi::class)
+    fun setActiveCharacterById(id: Int) = viewModelScope.launch {
+        val channel = Channel<DndCharacter?>()
+        GlobalScope.launch {
+            channel.send(repo.getById(id))
         }
-        return characterLiveData
+        _activeCharacter.value = channel.receive()
     }
 
     fun update(character: DndCharacter) = viewModelScope.launch {

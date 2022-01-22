@@ -99,5 +99,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
 
     //Accompanist
-    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.22.0-rc'
+    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.24.0-alpha'
+    implementation 'com.google.accompanist:accompanist-placeholder:0.24.0-alpha'
 }

@@ -54,12 +54,7 @@ fun SpellFilterComponent(
 
             Text("Level ${spellFilter.levelFilter.toRange().lower.roundToInt()} - ${spellFilter.levelFilter.toRange().upper.roundToInt()}")
         }
-//        Slider(
-//            value = spellFilter.levelFilterLower / MAX_SPELL_LEVEL,
-//            onValueChange = { onSpellFilterChanged(spellFilter.copy(levelFilterLower = it * MAX_SPELL_LEVEL)) },
-//            enabled = spellFilter.levelFilterEnabled
-//        )
-//
+
         RangeSlider(
             values = spellFilter.levelFilter,
             steps = 9,

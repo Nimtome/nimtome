@@ -37,11 +37,9 @@ class CharacterViewModel : ViewModel() {
     fun setActiveCharacterById(id: Int) = viewModelScope.launch {
         val channel = Channel<DndCharacter?>()
         GlobalScope.launch {
-            Log.d("FOSFASZ", "setActiveCharacterById: Szia Geza")
             channel.send(repo.getById(id))
         }
         _activeCharacter.value = channel.receive()
-        Log.d("FOSFASZ", "setActiveCharacterById: ${_activeCharacter.value?.name}")
     }
 
     fun update(character: DndCharacter) = viewModelScope.launch {

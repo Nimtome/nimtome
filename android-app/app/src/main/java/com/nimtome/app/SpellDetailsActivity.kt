@@ -10,9 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -35,18 +33,18 @@ import kotlinx.coroutines.launch
 
 class SpellDetailsActivity : ComponentActivity() {
     companion object {
-        const val KEY_SPELL_NAME = "KEY_SPELL_NAME"
+        const val KEY_SPELL_ID = "KEY_SPELL_ID"
         const val KEY_COLOR_OVERRIDE = "KEY_COLOR_OVERRIDE"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val spellName = intent.getStringExtra(KEY_SPELL_NAME) ?: ""
+        val spellId = intent.getIntExtra(KEY_SPELL_ID, 0)
 
         setContent {
             val spell by ViewModelProvider(this)[SpellViewModel::class.java]
-                .get(spellName)
+                .get(spellId)
                 .observeAsState(Spell())
 
             NimtomeApp(

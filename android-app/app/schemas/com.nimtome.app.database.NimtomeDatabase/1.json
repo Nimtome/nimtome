@@ -1,0 +1,175 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "dcf55127977b7898a4517b9ae5025593",
+    "entities": [
+      {
+        "tableName": "characters",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `level` INTEGER NOT NULL, `dndClass` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "characterId",
+            "columnName": "characterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dndClass",
+            "columnName": "dndClass",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "characterId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "spells",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`spellId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `level` INTEGER NOT NULL, `components` TEXT NOT NULL, `range` TEXT NOT NULL, `time` TEXT NOT NULL, `school` TEXT NOT NULL, `ritual` INTEGER NOT NULL, `duration` TEXT NOT NULL, `classes` TEXT NOT NULL, `roll` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "spellId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "desc",
+            "columnName": "desc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "components",
+            "columnName": "components",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "range",
+            "columnName": "range",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "school",
+            "columnName": "school",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ritual",
+            "columnName": "ritual",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "classes",
+            "columnName": "classes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "roll",
+            "columnName": "roll",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "spellId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_spells_name",
+            "unique": true,
+            "columnNames": [
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_spells_name` ON `${TABLE_NAME}` (`name`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "characterSpells",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `spellId` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `spellId`))",
+        "fields": [
+          {
+            "fieldPath": "characterId",
+            "columnName": "characterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "spellId",
+            "columnName": "spellId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "characterId",
+            "spellId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dcf55127977b7898a4517b9ae5025593')"
+    ]
+  }
+}

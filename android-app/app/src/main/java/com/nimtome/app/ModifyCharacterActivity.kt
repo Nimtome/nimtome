@@ -8,16 +8,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,62 +40,90 @@ import com.nimtome.app.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+class ModifyCharacterActivity : ComponentActivity() {
 
-class CreateCharacterActivity : ComponentActivity() {
+    companion object {
+        const val KEY_CHARACTER_ID = "KEY_CHARACTER_ID"
+    }
 
-    private lateinit var characterViewModel: CharacterViewModel
+    private lateinit var characterViewmodel: CharacterViewModel
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val characterId = intent.getIntExtra(KEY_CHARACTER_ID, -1)
 
-        characterViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
+        if (characterId == -1)
+            finish()
+
+        characterViewmodel = ViewModelProvider(this)[CharacterViewModel::class.java]
 
         setContent {
-            var dndCharacter by remember { mutableStateOf(DndCharacter()) }
+            var dndCharacter: DndCharacter? by remember { mutableStateOf(null) }
             NimtomeApp(
-                colorPalette = dndCharacter.preferredColorPalette
+                colorPalette = dndCharacter?.preferredColorPalette ?: DndApplication.colorPalette,
             ) {
-                CreateCharacterScreenContent(
-                    character = dndCharacter,
-                    onChangeDndCharacter = { dndCharacter = it }
-                )
+                val originalCharacter by characterViewmodel.get(characterId).observeAsState()
+
+                if (dndCharacter == null) {
+                    originalCharacter?.let { dndCharacter = it }
+                } else {
+                    ModifyCharacterScreenContent(
+                        character = dndCharacter!!,
+                        onChangeDndCharacter = { dndCharacter = it }
+                    )
+                }
             }
         }
     }
 
-    fun addNewCharacter(character: DndCharacter) {
-        characterViewModel.insert(character)
+    fun deleteCharacter(character: DndCharacter) {
+        characterViewmodel.delete(character)
+    }
+
+    fun updateCharacter(character: DndCharacter) {
+        characterViewmodel.update(character)
     }
 }
 
 @ExperimentalMaterialApi
 @Composable
-private fun CreateCharacterScreenContent(
+private fun ModifyCharacterScreenContent(
     character: DndCharacter = DndCharacter(),
     onChangeDndCharacter: (DndCharacter) -> Unit = {},
 ) {
 
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
-    val activity = LocalContext.current as? CreateCharacterActivity
+    val activity = LocalContext.current as? ModifyCharacterActivity
 
     val topText = "Create Your Character"
 
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = Modifier.fillMaxSize(),
-        topBar = { DndTopBar(topText) },
+        topBar = {
+            DndTopBar(
+                topText,
+                actions = {
+                    IconButton(onClick = { activity?.deleteCharacter(character) }) {
+                        Icon(Icons.Outlined.Delete, "delet character")
+                    }
+                }
+            )
+        },
         content = {
             Column {
                 CharacterDetailList(
                     dndCharacter = character,
-                    onChangeDndCharacter = { onChangeDndCharacter(it.copy()) },
+                    onChangeDndCharacter = {
+                        onChangeDndCharacter(it.copy())
+                    },
                 )
             }
         },
         floatingActionButton = {
-            CreateCharacterFloatingActionButton(
+            ModifyCharacterFloatingActionButton(
                 dndCharacter = character,
                 activity = activity,
                 scope = scope,
@@ -103,37 +134,37 @@ private fun CreateCharacterScreenContent(
 }
 
 @Composable
-private fun CreateCharacterFloatingActionButton(
+fun ModifyCharacterFloatingActionButton(
     dndCharacter: DndCharacter,
-    activity: CreateCharacterActivity?,
+    activity: ModifyCharacterActivity?,
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
 ) {
     val characterErrorText = stringResource(R.string.character_error)
 
     ExtendedFloatingActionButton(
-        text = { Text(stringResource(R.string.add_new_character)) },
+        text = { Text(stringResource(R.string.modify_character)) },
         onClick = {
             val validation = validateCharacter(dndCharacter)
             if (validation) {
-                activity?.addNewCharacter(dndCharacter)
+                activity?.updateCharacter(dndCharacter)
                 activity?.finish()
             } else
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar(characterErrorText)
                 }
         },
-        icon = { Icon(Icons.Outlined.Add, contentDescription = null) }
+        icon = { Icon(Icons.Outlined.Edit, contentDescription = null) },
     )
 }
 
 @ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable
-fun CreateCharacterPreview() {
+private fun ModifyCharacterPreview() {
     DndSpellsTheme {
         Surface {
-            CreateCharacterScreenContent()
+            ModifyCharacterPreview()
         }
     }
 }
@@ -141,10 +172,10 @@ fun CreateCharacterPreview() {
 @ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable
-fun CreateCharacterDarkPreview() {
+private fun ModifyCharacterDarkPreview() {
     DndSpellsTheme(darkTheme = true) {
         Surface(color = MaterialTheme.colors.background) {
-            CreateCharacterScreenContent()
+            ModifyCharacterPreview()
         }
     }
 }

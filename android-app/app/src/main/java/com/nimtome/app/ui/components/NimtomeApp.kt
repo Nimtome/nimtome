@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.nimtome.app.DndApplication.Companion.colorPalette
+import com.nimtome.app.ui.theme.ColorPalette
 import com.nimtome.app.ui.theme.DndSpellsTheme
 
 @Composable
@@ -37,5 +38,18 @@ fun NimtomeApp(
         Surface(color = MaterialTheme.colors.background) {
             component()
         }
+    }
+}
+
+@Composable
+fun NimtomeApp(
+    colorPalette: ColorPalette,
+    content: @Composable () -> Unit,
+) {
+    NimtomeApp(
+        darkColors = colorPalette.darkColors,
+        lightColors = colorPalette.lightColors,
+    ) {
+        content()
     }
 }

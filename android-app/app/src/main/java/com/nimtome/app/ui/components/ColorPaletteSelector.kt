@@ -52,8 +52,10 @@ fun ColorPaletteSelector(
 fun ColorPaletteSelectorPreview() {
     var colorPalette by remember { mutableStateOf(ColorPalette.Purple) }
     Surface {
-        ColorPaletteSelector(selected = colorPalette,
+        ColorPaletteSelector(
+            selected = colorPalette,
             onChanged = { colorPalette = it },
-            modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO))
+            modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO)
+        )
     }
 }

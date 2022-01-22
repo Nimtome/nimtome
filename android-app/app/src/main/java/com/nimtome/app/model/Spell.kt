@@ -1,6 +1,7 @@
 package com.nimtome.app.model
 
 data class Spell(
+    val id: Int = 0,
     val name: String,
     val desc: String,
     val level: Int,

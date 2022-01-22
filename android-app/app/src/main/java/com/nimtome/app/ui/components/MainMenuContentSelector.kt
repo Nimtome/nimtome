@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 enum class MainMenuElement(val legibleName: String) {
 
     CHARACTERS("Characters"),
-    SPELLS("Spells"),;
+    SPELLS("Spells"), ;
 }
 
 @ExperimentalMaterialApi

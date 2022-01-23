@@ -1,4 +1,4 @@
-package com.nimtome.app
+package com.nimtome.app.functions.home
 
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -6,76 +6,44 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.BackdropScaffold
-import androidx.compose.material.BackdropScaffoldState
-import androidx.compose.material.BackdropValue
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
-import com.nimtome.app.DndApplication.Companion.colorPalette
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.nimtome.app.R
+import com.nimtome.app.functions.character_management.CreateCharacterActivity
+import com.nimtome.app.functions.character_management.ModifyCharacterActivity
+import com.nimtome.app.functions.presentation.CharacterDetailsActivity
+import com.nimtome.app.functions.presentation.SpellDetailsActivity
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.Spell
 import com.nimtome.app.model.SpellImporter
-import com.nimtome.app.ui.components.CharacterCard
-import com.nimtome.app.ui.components.ColorPaletteSelector
-import com.nimtome.app.ui.components.EditCharacterCard
-import com.nimtome.app.ui.components.MainMenuContentSelector
-import com.nimtome.app.ui.components.MainMenuElement
-import com.nimtome.app.ui.components.MainMenuSpellCard
-import com.nimtome.app.ui.components.NimtomeApp
+import com.nimtome.app.ui.components.*
 import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
-import com.nimtome.app.ui.theme.ColorPalette
-import com.nimtome.app.ui.theme.DndSpellsTheme
-import com.nimtome.app.viewmodel.CharacterViewModel
-import com.nimtome.app.viewmodel.SpellViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 
+@AndroidEntryPoint
 class CharacterListActivity : ComponentActivity() {
-    private lateinit var characterViewModel: CharacterViewModel
-    private lateinit var spellsViewModel: SpellViewModel
 
-    @OptIn(DelicateCoroutinesApi::class)
+    private val viewModel: HomeViewModel by viewModels()
+
     private val getSpellsFile =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
@@ -85,13 +53,9 @@ class CharacterListActivity : ComponentActivity() {
                         runCatching {
                             resolver.openInputStream(uri)?.let { inputStream ->
                                 val importer = SpellImporter()
-                                val spellList = importer.importSpells(inputStream)
+                                viewModel.submitNewSpellList(importer.importSpells(inputStream))
 
                                 //TODO Show snakbar
-                                spellsViewModel.nuke()
-                                spellList.forEach { spell ->
-                                    spellsViewModel.insert(spell)
-                                }
                             }
                         }
                     }
@@ -105,61 +69,51 @@ class CharacterListActivity : ComponentActivity() {
             }
         }
 
-    private var showDialog = mutableStateOf(false)
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.viewEvent.observe(this) {
+            it?.let {
+                when (it) {
+                    is HomeViewEvent.OpenSpellImporter -> this.handleRequestPermission()
+                    is HomeViewEvent.AddCharacterEvent -> startActivity(
+                        Intent(
+                            this,
+                            CreateCharacterActivity::class.java
+                        )
+                    )
+                    is HomeViewEvent.ImportSpellsEvent -> TODO()
+                    is HomeViewEvent.ModifyCharacter -> startActivity(
+                        Intent(this, ModifyCharacterActivity::class.java)
+                            .putExtra(ModifyCharacterActivity.KEY_CHARACTER_ID, it.character.id)
+                    )
+                    is HomeViewEvent.OpenCharacterEvent -> startActivity(
+                        Intent(this, CharacterDetailsActivity::class.java)
+                            .putExtra(CharacterDetailsActivity.KEY_CHR_ID, it.character.id)
+                    )
+                    is HomeViewEvent.OpenSpellEvent -> startActivity(
+                        Intent(this, SpellDetailsActivity::class.java)
+                            .putExtra(SpellDetailsActivity.KEY_SPELL_ID, it.spell.id)
+                    )
+                }
+            }
+        }
+
         setContent {
-            characterViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
-            spellsViewModel = ViewModelProvider(this)[SpellViewModel::class.java]
-
-            val characterList by characterViewModel.allCharacters.observeAsState()
-            val spellList by spellsViewModel.allSpells.observeAsState()
-            var colorPalette by remember { mutableStateOf(colorPalette) }
-
+            val viewModel: HomeViewModel = hiltViewModel()
+            val state = viewModel.state.value
             NimtomeApp(
-                darkColors = colorPalette.darkColors,
-                lightColors = colorPalette.lightColors
+                colorPalette = state.colorPalette
             ) {
                 Surface(color = MaterialTheme.colors.background) {
                     MainActivityContent(
-                        characterList = characterList,
-                        spellList = spellList,
-                        importSpells = { handleRequestPermission() },
-                        addCharacter = {
-                            startActivity(
-                                Intent(
-                                    this,
-                                    CreateCharacterActivity::class.java
-                                )
-                            )
-                        },
-                        modifyCharacter = {
-                            val intent = Intent(this, ModifyCharacterActivity::class.java)
-                            intent.putExtra(ModifyCharacterActivity.KEY_CHARACTER_ID, it.id)
-                            startActivity(intent)
-                        },
-                        openCharacterDetails = {
-                            val intent = Intent(this, CharacterDetailsActivity::class.java)
-                            intent.putExtra(CharacterDetailsActivity.KEY_CHR_ID, it.id)
-                            startActivity(intent)
-                        },
-                        openSpellDetails = {
-                            startActivity(
-                                Intent(this, SpellDetailsActivity::class.java)
-                                    .putExtra(SpellDetailsActivity.KEY_SPELL_ID, it.id)
-                            )
-                        },
-                        colors = colorPalette,
-                        onColorsChange = {
-                            colorPalette = it
-                            DndApplication.colorPalette = it
-                        }
+                        viewModel = viewModel
                     )
-                    if (showDialog.value)
+                    if (state.showDialog)
                         StorageAccessRationaleDialog(
-                            closeDialog = { showDialog.value = false },
+                            closeDialog = { viewModel.changeShowDialog(false) },
                             importSpells = { requestStoragePermission() }
                         )
                 }
@@ -185,9 +139,7 @@ class CharacterListActivity : ComponentActivity() {
         }
     }
 
-    private fun showRationaleDialog() {
-        showDialog.value = true
-    }
+    private fun showRationaleDialog() = viewModel.changeShowDialog(true)
 
     private fun openSpellsFilePicker() {
         getSpellsFile.launch(arrayOf("*/*"))
@@ -236,23 +188,13 @@ private fun StorageAccessRationaleDialog(
 @ExperimentalMaterialApi
 @Composable
 private fun MainActivityContent(
-    characterList: List<DndCharacter>?,
-    spellList: List<Spell>?,
-    importSpells: () -> Unit,
-    openCharacterDetails: (DndCharacter) -> Unit = {},
-    addCharacter: () -> Unit = {},
-    modifyCharacter: (DndCharacter) -> Unit = {},
-    openSpellDetails: (Spell) -> Unit = {},
-    modifySpell: (Spell) -> Unit = {},
-    colors: ColorPalette,
-    onColorsChange: (ColorPalette) -> Unit,
+    viewModel: HomeViewModel
+
 ) {
+    val state by viewModel.state
+
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBackdropScaffoldState(initialValue = BackdropValue.Concealed)
-
-    var menuSelection by remember { mutableStateOf(MainMenuElement.CHARACTERS) }
-
-    var isEditMode by remember { mutableStateOf(false) }
 
     BackdropScaffold(
         appBar = {
@@ -265,13 +207,13 @@ private fun MainActivityContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { isEditMode = !isEditMode }) {
+                    IconButton(onClick = { viewModel.changeEditMode(!state.editMode) }) {
                         Icon(Icons.Default.Edit, "Edit")
                     }
-                    IconButton(onClick = { importSpells() }) {
+                    IconButton(onClick = { viewModel.importSpellsFromFile() }) {
                         Icon(painterResource(id = R.drawable.application_import), "Import spells")
                     }
-                    IconButton(onClick = { addCharacter() }) {
+                    IconButton(onClick = { viewModel.openAddCharacter() }) {
                         Icon(Icons.Default.Add, "Add Character")
                     }
                 }
@@ -286,34 +228,33 @@ private fun MainActivityContent(
             ) {
                 MainMenuContentSelector(
                     modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO),
-                    selectedElement = menuSelection,
-                    onSelectedElementChanged = { menuSelection = it },
+                    selectedElement = state.selectedList,
+                    onSelectedElementChanged = { viewModel.selectContentList(it) },
                 )
 
                 Spacer(modifier = Modifier.padding(bottom = 5.dp))
 
                 ColorPaletteSelector(
                     modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO),
-                    selected = colors,
-                    onChanged = onColorsChange
+                    selected = state.colorPalette,
+                    onChanged = { viewModel.changePreferredColors(it) }
                 )
 
                 Spacer(modifier = Modifier.padding(bottom = 15.dp))
             }
         },
         frontLayerContent = {
-            if (menuSelection == MainMenuElement.CHARACTERS)
-                CharacterList(
-                    list = characterList,
-                    isEditMode = isEditMode,
-                    onClick = { openCharacterDetails(it) },
-                    onEditClick = { modifyCharacter(it) },
+            when (state.selectedList) {
+                HomeScreenSelection.CHARACTERS -> CharacterList(
+                    list = state.characters,
+                    isEditMode = state.editMode,
+                    onClick = { viewModel.openCharacterDetails(it) },
+                    onEditClick = { viewModel.modifyCharacter(it) },
                 )
-            else
-                SpellList(
-                    list = spellList,
-                    onClick = { openSpellDetails(it) },
-                    isEditMode = isEditMode,
+                HomeScreenSelection.SPELLS -> SpellList(
+                    list = state.spells,
+                    onClick = { viewModel.openSpellDetails(it) },
+                    isEditMode = state.editMode,
                     onEditClick = {
                         scope.launch {
                             scaffoldState.snackbarHostState
@@ -321,6 +262,7 @@ private fun MainActivityContent(
                         }
                     },
                 )
+            }
         },
         headerHeight = 32.dp,
         scaffoldState = scaffoldState,
@@ -362,23 +304,15 @@ private fun CharacterList(
                     items(
                         items = list,
                         itemContent = { character ->
-                            if (!isEditMode)
-                                CharacterCard(
-                                    character = character,
-                                    onClick = { onClick(it) },
-                                    modifier = Modifier
-                                        .fillMaxWidth(CARD_INNER_FILL_RATIO)
-                                        .padding(5.dp),
-                                )
-                            else
-                                EditCharacterCard(
-                                    character = character,
-                                    onClick = { onClick(it) },
-                                    onEditClick = { onEditClick(it) },
-                                    modifier = Modifier
-                                        .fillMaxWidth(CARD_INNER_FILL_RATIO)
-                                        .padding(5.dp)
-                                )
+                            CharacterCard(
+                                character = character,
+                                onClick = { onClick(it) },
+                                editMode = isEditMode,
+                                onEditClick = onEditClick,
+                                modifier = Modifier
+                                    .fillMaxWidth(CARD_INNER_FILL_RATIO)
+                                    .padding(5.dp),
+                            )
                         }
                     )
                 }
@@ -425,17 +359,18 @@ private fun SpellList(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-@Preview(showBackground = true)
-@Composable
-fun CharacterListPreview() {
-    DndSpellsTheme {
-        MainActivityContent(
-            characterList = listOf(sampleCharacter),
-            spellList = sampleSpells,
-            importSpells = { },
-            colors = ColorPalette.Purple,
-            onColorsChange = { }
-        )
-    }
-}
+//@OptIn(ExperimentalMaterialApi::class)
+//@Preview(showBackground = true)
+//@Composable
+//fun CharacterListPreview() {
+//    DndSpellsTheme {
+//        MainActivityContent(
+//            characterList = listOf(sampleCharacter),
+//            spellList = sampleSpells,
+//            importSpells = { },
+//            colors = ColorPalette.Purple,
+//            onColorsChange = { },
+//            viewModel = viewModel
+//        )
+//    }
+//}

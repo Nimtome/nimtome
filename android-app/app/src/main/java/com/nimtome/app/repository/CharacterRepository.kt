@@ -8,11 +8,13 @@ import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
 import com.nimtome.app.ui.theme.ColorPalette
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class CharacterRepository(private val nimtomeDao: NimtomeDao) {
 
-    fun getAllCharacters(): LiveData<List<DndCharacter>> {
+    fun getAllCharacters(): Flow<List<DndCharacter>> {
         return nimtomeDao.getAllCharacters().map {
             it.map { roomCharacter ->
                 roomCharacter.toDomainModel()
@@ -41,6 +43,10 @@ class CharacterRepository(private val nimtomeDao: NimtomeDao) {
 
     suspend fun update(character: DndCharacter) = withContext(Dispatchers.IO) {
         nimtomeDao.updateCharacter(character.toRoomDomain())
+    }
+
+    suspend fun getFlow(id: Int): Flow<DndCharacter?> {
+        return nimtomeDao.getCharacterFlow(id).map { it?.toDomainModel() }
     }
 }
 

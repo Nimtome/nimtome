@@ -1,5 +1,6 @@
 package com.nimtome.app.ui.components
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,8 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.nimtome.app.functions.presentation.sampleCharacter
 import com.nimtome.app.model.DndCharacter
-import com.nimtome.app.sampleCharacter
 import com.nimtome.app.ui.theme.CARD_ELEVATION
 import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
 import com.nimtome.app.ui.theme.DndSpellsTheme
@@ -29,23 +30,8 @@ import com.nimtome.app.ui.theme.DndSpellsTheme
 fun CharacterCard(
     character: DndCharacter,
     onClick: (DndCharacter) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Card(
-        onClick = { onClick(character) },
-        modifier = modifier,
-        elevation = CARD_ELEVATION
-    ) {
-        CharacterContent(character = character)
-    }
-}
-
-@ExperimentalMaterialApi
-@Composable
-fun EditCharacterCard(
-    character: DndCharacter,
-    onClick: (DndCharacter) -> Unit,
-    onEditClick: (DndCharacter) -> Unit,
+    editMode: Boolean = false,
+    onEditClick: (DndCharacter) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -54,19 +40,31 @@ fun EditCharacterCard(
         elevation = CARD_ELEVATION
     ) {
         Row(Modifier.fillMaxWidth()) {
-            IconButton(onClick = { onEditClick(character) }) {
-                Icon(Icons.Default.Edit, "Edit Character")
+            AnimatedVisibility(
+                visible = editMode,
+                enter = fadeIn() + slideInHorizontally(),
+                exit = fadeOut() + slideOutHorizontally()
+            ) {
+                IconButton(onClick = { onEditClick(character) }) {
+                    Icon(Icons.Default.Edit, "Edit Character")
+                }
             }
-            CharacterContent(character = character)
+
+
+            CharacterContent(
+                character = character,
+            )
         }
     }
 }
 
 @Composable
-private fun CharacterContent(character: DndCharacter) {
+private fun CharacterContent(
+    character: DndCharacter,
+    modifier: Modifier = Modifier.fillMaxWidth()
+) {
     Column(
-        Modifier
-            .fillMaxWidth()
+        modifier
             .padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -119,9 +117,10 @@ private fun EditCharacterCardPreview() {
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            EditCharacterCard(
+            CharacterCard(
                 character = sampleCharacter,
                 onClick = {},
+                editMode = true,
                 onEditClick = {},
                 modifier = Modifier.fillMaxWidth(CARD_INNER_FILL_RATIO)
             )

@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.nimtome.app.model.DndCharacter
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,7 +16,7 @@ interface NimtomeDao {
     fun addCharacter(character: RoomCharacter)
 
     @Query("SELECT * FROM characters")
-    fun getAllCharacters(): LiveData<List<RoomCharacter>>
+    fun getAllCharacters(): Flow<List<RoomCharacter>>
 
     @Query("SELECT * FROM characters WHERE characterId == :id")
     fun getCharacter(id: Int): RoomCharacter?
@@ -33,7 +34,7 @@ interface NimtomeDao {
     fun insertSpell(spell: RoomSpell)
 
     @Query("SELECT * FROM spells")
-    fun getAllSpells(): LiveData<List<RoomSpell>>
+    fun getAllSpells(): Flow<List<RoomSpell>>
 
     @Query("SELECT * FROM spells WHERE spellId == :id")
     fun getSpellById(id: Int): RoomSpell?
@@ -60,4 +61,7 @@ interface NimtomeDao {
 
     @Delete
     fun removeCharacterSpell(characterSpell: CharacterSpellCrossRef)
+
+    @Query("SELECT * FROM characters WHERE characterId == :id")
+    fun getCharacterFlow(id: Int): Flow<RoomCharacter?>
 }

@@ -8,25 +8,21 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.nimtome.app.functions.home.HomeScreenSelection
 
-enum class MainMenuElement(val legibleName: String) {
-
-    CHARACTERS("Characters"),
-    SPELLS("Spells"), ;
-}
 
 @ExperimentalMaterialApi
 @Composable
 fun MainMenuContentSelector(
     modifier: Modifier = Modifier,
-    selectedElement: MainMenuElement,
-    onSelectedElementChanged: (MainMenuElement) -> Unit,
+    selectedElement: HomeScreenSelection,
+    onSelectedElementChanged: (HomeScreenSelection) -> Unit,
 ) {
     LazyColumn(
         modifier,
         contentPadding = PaddingValues(1.dp)
     ) {
-        items(MainMenuElement.values()) { mainMenuElement ->
+        items(HomeScreenSelection.values()) { mainMenuElement ->
             MainMenuContentSelectorButton(
                 modifier = Modifier.fillMaxWidth(),
                 selected = mainMenuElement == selectedElement,

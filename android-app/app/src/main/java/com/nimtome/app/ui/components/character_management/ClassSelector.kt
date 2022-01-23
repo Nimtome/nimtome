@@ -21,10 +21,9 @@ fun ClassSelector(
     modifier: Modifier,
     allClasses: List<DndClass>,
     onClassChange: (DndClass) -> Unit,
-    starterClass: DndClass,
+    selectedClass: DndClass,
 ) {
     var expandedState by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf(starterClass) }
 
     ExposedDropdownMenuBox(
         expanded = expandedState,
@@ -36,7 +35,7 @@ fun ClassSelector(
     ) {
         OutlinedTextField(
             readOnly = true,
-            value = selectedOption.legibleName,
+            value = selectedClass.legibleName,
             onValueChange = {},
             label = { Text("Class") },
             trailingIcon = {
@@ -59,7 +58,6 @@ fun ClassSelector(
                 DropdownMenuItem(
                     onClick = {
                         onClassChange(it)
-                        selectedOption = it
                         expandedState = false
                     },
                     modifier = Modifier.fillMaxWidth()

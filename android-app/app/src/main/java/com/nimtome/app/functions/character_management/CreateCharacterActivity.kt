@@ -34,6 +34,17 @@ class CreateCharacterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        var errors: List<CharacterValidationError> = emptyList()
+
+        viewModel.event.observe(this) {
+            when (it) {
+                CreateModifyCharacterEvent.CharacterOk -> errors = emptyList()
+                is CreateModifyCharacterEvent.CharacterValidationFailed -> errors = it.errors
+                CreateModifyCharacterEvent.FinishActivity -> finish()
+                null -> {}
+            }
+        }
+
         setContent {
             val dndCharacter = viewModel.state.value.character
             NimtomeApp(

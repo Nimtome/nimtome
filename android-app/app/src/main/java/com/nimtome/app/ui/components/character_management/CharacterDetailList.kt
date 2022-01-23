@@ -15,6 +15,7 @@ import com.nimtome.app.R
 import com.nimtome.app.functions.presentation.sampleCharacter
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
+import com.nimtome.app.ui.components.character_management.LevelSelector
 import com.nimtome.app.ui.theme.DndSpellsTheme
 
 @ExperimentalMaterialApi
@@ -48,7 +49,7 @@ fun CharacterDetailList(
             onClassChange = {
                 onChangeDndCharacter(dndCharacter.copy(dndClass = it))
             },
-            starterClass = dndCharacter.dndClass
+            selectedClass = dndCharacter.dndClass
         )
 
         Spacer(modifier = Modifier.padding(8.dp))
@@ -59,9 +60,10 @@ fun CharacterDetailList(
             onLevelChange = {
                 onChangeDndCharacter(dndCharacter.copy(level = it))
             },
+            dndClass = dndCharacter.dndClass
         )
 
-        Spacer(Modifier.padding(bottom = 8.dp))
+        Spacer(Modifier.padding(8.dp))
 
         Row (
             horizontalArrangement = Arrangement.Start,

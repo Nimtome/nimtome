@@ -12,11 +12,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nimtome.app.R
+import com.nimtome.app.functions.presentation.sampleCharacter
 import com.nimtome.app.model.DndCharacter
 import com.nimtome.app.model.DndClass
-import com.nimtome.app.sampleCharacter
-import com.nimtome.app.ui.components.LevelSelector
-import com.nimtome.app.ui.theme.CARD_INNER_FILL_RATIO
 import com.nimtome.app.ui.theme.DndSpellsTheme
 
 @ExperimentalMaterialApi

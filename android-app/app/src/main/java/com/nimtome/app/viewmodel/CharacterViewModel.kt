@@ -19,7 +19,6 @@ class CharacterViewModel : ViewModel() {
         nimtomeDao = DndApplication.nimtomeDatabase.nimtomeDao()
     )
 
-    val allCharacters: LiveData<List<DndCharacter>> = repo.getAllCharacters()
 
     fun insert(character: DndCharacter) = viewModelScope.launch {
         repo.insert(character)

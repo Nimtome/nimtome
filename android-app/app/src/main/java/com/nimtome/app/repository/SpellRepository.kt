@@ -6,10 +6,12 @@ import com.nimtome.app.database.NimtomeDao
 import com.nimtome.app.database.RoomSpell
 import com.nimtome.app.model.Spell
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class SpellRepository(private val nimtomeDao: NimtomeDao) {
-    fun getAllSpells(): LiveData<List<Spell>> {
+    fun getAllSpells(): Flow<List<Spell>> {
         return nimtomeDao.getAllSpells().map {
             it.map { roomSpell ->
                 roomSpell.toDomainModel()

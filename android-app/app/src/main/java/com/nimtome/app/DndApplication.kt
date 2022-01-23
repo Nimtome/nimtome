@@ -5,7 +5,9 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import com.nimtome.app.database.NimtomeDatabase
 import com.nimtome.app.ui.theme.ColorPalette
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class DndApplication : Application() {
 
     companion object {
@@ -14,7 +16,7 @@ class DndApplication : Application() {
         lateinit var sharedPreferences: SharedPreferences
             private set
         private const val SP_ID_MAIN = "com.nimtome.nimtome.main"
-        private const val SP_COLOR_THEME = "COLOR_THEME"
+        const val SP_COLOR_THEME = "COLOR_THEME"
 
         var colorPalette: ColorPalette
             get() {

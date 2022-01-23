@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.nimtome.app">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -14,15 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DndSpells">
         <activity
-            android:name=".ModifyCharacterActivity"
+            android:name=".functions.character_management.ModifyCharacterActivity"
             android:exported="false"
             android:label="@string/title_activity_modify_character"
             android:theme="@style/Theme.DndSpells.NoActionBar" />
         <activity
-            android:name=".CharacterListActivity"
+            android:name=".functions.home.CharacterListActivity"
             android:exported="true"
             android:label="@string/title_activity_character_list"
-            android:theme="@style/Theme.DndSpells.NoActionBar">
+            android:theme="@style/Theme.DndSpells.NoActionBar"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,22 +32,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SelectSpellsActivity"
+            android:name=".functions.presentation.SelectSpellsActivity"
             android:exported="false"
             android:label="@string/title_activity_select_spells"
             android:theme="@style/Theme.DndSpells.NoActionBar" />
         <activity
-            android:name=".CharacterDetailsActivity"
+            android:name=".functions.presentation.CharacterDetailsActivity"
             android:exported="false"
             android:label="@string/title_activity_character_details"
             android:theme="@style/Theme.DndSpells.NoActionBar" />
         <activity
-            android:name=".SpellDetailsActivity"
+            android:name=".functions.presentation.SpellDetailsActivity"
             android:exported="false"
             android:label="@string/title_activity_spell_details"
             android:theme="@style/Theme.DndSpells.NoActionBar" />
         <activity
-            android:name=".CreateCharacterActivity"
+            android:name=".functions.character_management.CreateCharacterActivity"
             android:exported="false"
             android:label="@string/title_activity_create_character"
             android:theme="@style/Theme.DndSpells.NoActionBar" />

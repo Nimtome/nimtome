@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 class SpellViewModel : ViewModel() {
     private val repo = SpellRepository(DndApplication.nimtomeDatabase.nimtomeDao())
 
-    val allSpells: LiveData<List<Spell>> = repo.getAllSpells()
+//    val allSpells: LiveData<List<Spell>> = repo.getAllSpells()
 
     fun insert(spell: Spell) = viewModelScope.launch {
         repo.insert(spell)

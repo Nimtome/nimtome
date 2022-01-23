@@ -1,4 +1,4 @@
-package com.nimtome.app
+package com.nimtome.app.functions.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.nimtome.app.DndApplication.Companion.colorPalette
+import com.nimtome.app.R
 import com.nimtome.app.model.Spell
 import com.nimtome.app.ui.components.DndTopBar
 import com.nimtome.app.ui.components.NimtomeApp
